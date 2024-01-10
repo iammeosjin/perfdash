@@ -1,11 +1,10 @@
 import { Handlers } from '$fresh/server.ts';
 import { useSignal } from '@preact/signals';
 import Counter from '../islands/Counter.tsx';
-import sqlite from '../libs/sqlite.ts';
+import UserModel from '../models/user.ts';
 
 export const handler: Handlers = {
 	GET(_, ctx) {
-		console.log('people', sqlite.query('SELECT name FROM people'));
 		return ctx.render();
 	},
 };
