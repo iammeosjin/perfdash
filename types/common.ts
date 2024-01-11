@@ -1,4 +1,4 @@
-enum Team {
+export enum Team {
 	OPEXA = 'opexa',
 	NEXIUX = 'nexiux',
 }
@@ -46,10 +46,16 @@ export type TaskCycleSummary = {
 };
 
 export type UserWeeklySummary = {
-	id: ID;
-	user: string;
+	id: ID; // [team, year, month, weekNumber, user]
+	user: ID;
 	weekNumber: number;
 	weekYear: number;
-	pullRequestSummary: PullRequestSummary;
-	taskCycleSummary: TaskCycleSummary[];
+	pullRequestSummary?: PullRequestSummary;
+	taskCycleSummary?: TaskCycleSummary[];
+};
+
+export type CycleTimeMetrics = {
+	min: number;
+	max: number;
+	points: number;
 };

@@ -38,3 +38,17 @@ export async function createUser(user: User) {
 export async function bulkCreateUsers(users: User[]) {
 	await Bluebird.map(users, (user) => createUser(user));
 }
+
+export async function getUserByGithubHandle(handle: string) {
+	const githubUser = await GithubUserModel.get([handle]);
+	if (!githubUser) {
+		return null;
+	}
+
+	const user = await UserModel.get(githubUser.user);
+	if (!user) {
+		return null;
+	}
+
+	return user;
+}
