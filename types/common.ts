@@ -38,8 +38,14 @@ export type PullRequestSummary = {
 	pullRequestPoints: number;
 };
 
+export enum TaskCycleSummaryType {
+	BUG = 'BUG',
+	STORY = 'STORY',
+	TASK = 'TASK',
+}
+
 export type TaskCycleSummary = {
-	type: string;
+	type: TaskCycleSummaryType;
 	taskDoneCount: number;
 	taskDoneCycleTime: number;
 	taskCyclePoints: number;

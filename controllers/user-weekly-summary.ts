@@ -12,6 +12,7 @@ import {
 } from '../types/common.ts';
 import { TIMEZONE } from '../libs/constants.ts';
 import CursorModel from '../models/cursor.ts';
+import omit from 'https://deno.land/x/ramda@v0.27.2/source/omit.js';
 
 export async function upsertUserWeeklySummary(
 	input: {
@@ -19,7 +20,7 @@ export async function upsertUserWeeklySummary(
 		date: string;
 		user: ID;
 		pullRequestSummary?: PullRequestSummary;
-		taskCycleSummary?: TaskCycleSummary[];
+		taskCycleSummary?: TaskCycleSummary;
 	},
 ) {
 	const startOfWeek = DateTime.fromISO(input.date).setZone(TIMEZONE).startOf(
@@ -36,6 +37,8 @@ export async function upsertUserWeeklySummary(
 
 	const userWeeklySummary = await UserWeeklySummaryModel.get(id);
 
+	const debug = false;
+
 	let pullRequestSummary: PullRequestSummary | undefined = userWeeklySummary
 		?.pullRequestSummary;
 
@@ -46,12 +49,56 @@ export async function upsertUserWeeklySummary(
 		]);
 	}
 
+	let taskCycleSummary: TaskCycleSummary[] | undefined = userWeeklySummary
+		?.taskCycleSummary;
+
+	if (input.taskCycleSummary) {
+		const existingTaskCycleSummary = (taskCycleSummary ||= []).find((tsc) =>
+			tsc.type === input.taskCycleSummary?.type
+		);
+
+		if (existingTaskCycleSummary) {
+			Object.assign(
+				existingTaskCycleSummary,
+				reduceAndMerge([
+					existingTaskCycleSummary,
+					omit(['type'])(input.taskCycleSummary),
+				]),
+			);
+		} else {
+			taskCycleSummary = [
+				...(taskCycleSummary || []),
+				input.taskCycleSummary,
+			];
+		}
+
+		if (debug) {
+			console.log(
+				'existingTaskCycleSummary',
+				existingTaskCycleSummary,
+				taskCycleSummary,
+			);
+		}
+	}
+
+	if (debug) {
+		console.log('inserting', {
+			id,
+			user: input.user,
+			weekNumber: startOfWeek.weekNumber,
+			weekYear: startOfWeek.weekYear,
+			pullRequestSummary: pullRequestSummary,
+			taskCycleSummary,
+		});
+	}
+
 	await UserWeeklySummaryModel.insert({
 		id,
 		user: input.user,
 		weekNumber: startOfWeek.weekNumber,
 		weekYear: startOfWeek.weekYear,
 		pullRequestSummary: pullRequestSummary,
+		taskCycleSummary,
 	});
 }
 
@@ -65,6 +112,13 @@ export async function clearUserWeeklySummary(team: Team) {
 
 	await Bluebird.map(
 		await CursorModel.list({ prefix: ['github'] }),
+		async (cursor) => {
+			await CursorModel.delete(cursor.id);
+		},
+	);
+
+	await Bluebird.map(
+		await CursorModel.list({ prefix: ['jira'] }),
 		async (cursor) => {
 			await CursorModel.delete(cursor.id);
 		},

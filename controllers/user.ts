@@ -5,6 +5,8 @@ import JiraUserModel from '../models/jira-user.ts';
 import GithubUserModel from '../models/github-user.ts';
 import UserModel from '../models/user.ts';
 
+const userCache = new Map<string, User | null>();
+
 export async function createUser(user: User) {
 	if (!user.name) {
 		return new Response('Name is required', {
@@ -40,14 +42,35 @@ export async function bulkCreateUsers(users: User[]) {
 }
 
 export async function getUserByGithubHandle(handle: string) {
-	const githubUser = await GithubUserModel.get([handle]);
-	if (!githubUser) {
-		return null;
+	let user = userCache.get(handle);
+	if (!user) {
+		const githubUser = await GithubUserModel.get([handle]);
+		if (!githubUser) {
+			return null;
+		}
+
+		user = await UserModel.get(githubUser.user);
+		if (!user) {
+			return null;
+		}
 	}
 
-	const user = await UserModel.get(githubUser.user);
+	return user;
+}
+
+export async function getUserByJiraHandle(handle: string) {
+	let user = userCache.get(handle);
+
 	if (!user) {
-		return null;
+		const jiraUser = await JiraUserModel.get([handle]);
+		if (!jiraUser) {
+			return null;
+		}
+
+		user = await UserModel.get(jiraUser.user);
+		if (!user) {
+			return null;
+		}
 	}
 
 	return user;

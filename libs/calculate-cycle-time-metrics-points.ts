@@ -1,6 +1,6 @@
 import { CycleTimeMetrics } from '../types/common.ts';
 
-export default function calculateCycleMetricsPoints(
+export default function calculateCycleTimeMetricsPoints(
 	value: number,
 	metrics: CycleTimeMetrics[],
 ) {
