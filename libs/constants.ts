@@ -2,6 +2,8 @@ import { CycleTimeMetrics, Team } from '../types/common.ts';
 
 export const TIMEZONE = 'Asia/Manila';
 
+export const DEFAULT_IMAGE = '/images/user.png';
+
 export const GITHUB_REPOSITORIES = {
 	[Team.OPEXA]: {
 		owner: 'HighOutputVentures',

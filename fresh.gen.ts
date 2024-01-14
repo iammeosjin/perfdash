@@ -11,7 +11,8 @@ import * as $backend_team_year_month_day_ from './routes/backend/[team]/[year]/[
 import * as $greet_name_ from './routes/greet/[name].tsx';
 import * as $index from './routes/index.tsx';
 import * as $version from './routes/version.ts';
-import * as $Counter from './islands/Counter.tsx';
+import * as $weekly_pull_request_summary_table from './islands/weekly-pull-request-summary-table.tsx';
+import * as $weekly_task_summary_table from './islands/weekly-task-summary-table.tsx';
 import { type Manifest } from '$fresh/server.ts';
 
 const manifest = {
@@ -28,7 +29,9 @@ const manifest = {
 		'./routes/version.ts': $version,
 	},
 	islands: {
-		'./islands/Counter.tsx': $Counter,
+		'./islands/weekly-pull-request-summary-table.tsx':
+			$weekly_pull_request_summary_table,
+		'./islands/weekly-task-summary-table.tsx': $weekly_task_summary_table,
 	},
 	baseUrl: import.meta.url,
 } satisfies Manifest;

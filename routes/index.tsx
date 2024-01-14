@@ -1,12 +1,17 @@
 import { Handlers } from '$fresh/server.ts';
-import UserModel from '../models/user.ts';
-import UserWeeklySummaryModel from '../models/user-weekly-summary.ts';
-import TaskModel from '../models/task.ts';
+// @deno-types=npm:@types/luxon
+import { DateTime } from 'npm:luxon';
 
 export const handler: Handlers = {
-	async GET() {
-		return new Response(JSON.stringify({
-			weeklyStats: await UserWeeklySummaryModel.list(),
-		}));
+	GET() {
+		const headers = new Headers();
+		headers.set(
+			'location',
+			`/backend/nexiux/${DateTime.now().toFormat('yyyy/MM/dd')}`,
+		);
+		return new Response(null, {
+			status: 303, // See Other
+			headers,
+		});
 	},
 };

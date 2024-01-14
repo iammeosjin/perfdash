@@ -49,13 +49,13 @@ export async function upsertUserWeeklySummary(
 		]);
 	}
 
-	let taskCycleSummary: TaskCycleSummary[] | undefined = userWeeklySummary
-		?.taskCycleSummary;
+	let taskCycleSummaries: TaskCycleSummary[] | undefined = userWeeklySummary
+		?.taskCycleSummaries;
 
 	if (input.taskCycleSummary) {
-		const existingTaskCycleSummary = (taskCycleSummary ||= []).find((tsc) =>
-			tsc.type === input.taskCycleSummary?.type
-		);
+		const existingTaskCycleSummary = (taskCycleSummaries ||= []).find((
+			tsc,
+		) => tsc.type === input.taskCycleSummary?.type);
 
 		if (existingTaskCycleSummary) {
 			Object.assign(
@@ -66,8 +66,8 @@ export async function upsertUserWeeklySummary(
 				]),
 			);
 		} else {
-			taskCycleSummary = [
-				...(taskCycleSummary || []),
+			taskCycleSummaries = [
+				...(taskCycleSummaries || []),
 				input.taskCycleSummary,
 			];
 		}
@@ -76,7 +76,7 @@ export async function upsertUserWeeklySummary(
 			console.log(
 				'existingTaskCycleSummary',
 				existingTaskCycleSummary,
-				taskCycleSummary,
+				taskCycleSummaries,
 			);
 		}
 	}
@@ -88,7 +88,7 @@ export async function upsertUserWeeklySummary(
 			weekNumber: startOfWeek.weekNumber,
 			weekYear: startOfWeek.weekYear,
 			pullRequestSummary: pullRequestSummary,
-			taskCycleSummary,
+			taskCycleSummaries,
 		});
 	}
 
@@ -98,7 +98,7 @@ export async function upsertUserWeeklySummary(
 		weekNumber: startOfWeek.weekNumber,
 		weekYear: startOfWeek.weekYear,
 		pullRequestSummary: pullRequestSummary,
-		taskCycleSummary,
+		taskCycleSummaries,
 	});
 }
 

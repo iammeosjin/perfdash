@@ -1,0 +1,91 @@
+[
+	{
+		"department": "BACKEND",
+		"github": "Eerie-Cson",
+		"image": "/images/ericson-sacdalan.png",
+		"jira": "5fcfdbcecb350d006830c2b2",
+		"level": 1,
+		"name": "Ericson Sacdalan",
+		"teams": [
+			"nexiux"
+		]
+	},
+	{
+		"department": "BACKEND",
+		"github": "johnmark83",
+		"image": "/images/john-mark-bautista.png",
+		"jira": "70121:bdbc5579-d911-4300-a559-0fdde913907b",
+		"level": 1,
+		"name": "John Mark Bautista",
+		"teams": [
+			"nexiux"
+		]
+	},
+	{
+		"department": "BACKEND",
+		"github": "klienn",
+		"image": "/images/klien-menard-luminarias.png",
+		"jira": "5f98b79f048052006be65464",
+		"level": 1,
+		"name": "Klien Menard Luminarias",
+		"teams": [
+			"nexiux"
+		]
+	},
+	{
+		"department": "BACKEND",
+		"github": "CeazarMasula",
+		"image": "/images/ceazar-masula.png",
+		"jira": "6029bc8e39ed51006a32f46f",
+		"level": 2,
+		"name": "Ceazar Masula",
+		"role": "SA",
+		"teams": [
+			"nexiux"
+		]
+	},
+	{
+		"department": "BACKEND",
+		"github": "silemi5",
+		"image": "/images/emir-jo-jr.png",
+		"jira": "5fb5d37b3b4f59006862702d",
+		"level": 2,
+		"name": "Emir Jo Jr",
+		"role": "INFRA",
+		"teams": [
+			"nexiux"
+		]
+	},
+	{
+		"department": "BACKEND",
+		"github": "jmrcmendoza",
+		"image": "/images/jason-marc-mendoza.png",
+		"jira": "606436d08d057500687844f6",
+		"level": 3,
+		"name": "Jason Marc Mendoza",
+		"role": "SA",
+		"teams": [
+			"nexiux"
+		]
+	},
+	{
+		"department": "BACKEND",
+		"github": "yacunas",
+		"image": "/images/ronnel-james-yacunas.png",
+		"level": 2,
+		"name": "Ronnel James Yacunas",
+		"teams": [
+			"opexa"
+		]
+	},
+	{
+		"department": "BACKEND",
+		"github": "jodacz007",
+		"image": "/images/jovy-dacay.png",
+		"level": 2,
+		"name": "Jovy Dacay",
+		"teams": [
+			"opexa"
+		]
+	}
+]

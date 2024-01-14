@@ -1,7 +1,7 @@
 import DefaultModel from '../libs/model.ts';
-import { ID, Team, UserWeeklySummary } from '../types/common.ts';
+import { ID, Team, WeeklySummary } from '../types/common.ts';
 
-class Model extends DefaultModel<UserWeeklySummary> {
+class Model extends DefaultModel<WeeklySummary> {
 	getPrefix() {
 		return 'user-weekly-summary';
 	}

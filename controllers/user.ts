@@ -33,6 +33,7 @@ export async function createUser(user: User) {
 
 	await UserModel.insert({
 		...user,
+		username,
 		id: [username],
 	});
 }

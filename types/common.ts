@@ -51,13 +51,23 @@ export type TaskCycleSummary = {
 	taskCyclePoints: number;
 };
 
-export type UserWeeklySummary = {
+export type WeeklySummary = {
 	id: ID; // [team, year, month, weekNumber, user]
 	user: ID;
 	weekNumber: number;
 	weekYear: number;
 	pullRequestSummary?: PullRequestSummary;
-	taskCycleSummary?: TaskCycleSummary[];
+	taskCycleSummaries?: TaskCycleSummary[];
+};
+
+export type UserWeeklySummary = {
+	id: ID; // [team, year, month, weekNumber, user]
+	user: User;
+	weekNumber: number;
+	weekYear: number;
+	pullRequestSummary?: PullRequestSummary;
+	taskCycleSummaries?: TaskCycleSummary[];
+	taskCycleAverageTime: number;
 };
 
 export type CycleTimeMetrics = {
