@@ -10,6 +10,7 @@ import * as $api_jobs_job_ from './routes/api/jobs/[job].ts';
 import * as $api_joke from './routes/api/joke.ts';
 import * as $api_users from './routes/api/users.ts';
 import * as $backend_team_year_month_day_ from './routes/backend/[team]/[year]/[month]/[day].tsx';
+import * as $doc from './routes/doc.tsx';
 import * as $greet_name_ from './routes/greet/[name].tsx';
 import * as $index from './routes/index.tsx';
 import * as $version from './routes/version.ts';
@@ -28,6 +29,7 @@ const manifest = {
 		'./routes/api/users.ts': $api_users,
 		'./routes/backend/[team]/[year]/[month]/[day].tsx':
 			$backend_team_year_month_day_,
+		'./routes/doc.tsx': $doc,
 		'./routes/greet/[name].tsx': $greet_name_,
 		'./routes/index.tsx': $index,
 		'./routes/version.ts': $version,

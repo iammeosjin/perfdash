@@ -145,7 +145,9 @@ export default function WeeklyTaskSummaryTable(props: Props) {
 										},
 									)}
 								</tbody>
-								{(Object.values(footer.totalTaskCycleSummary)
+								{(Object.values(
+										footer.totalTaskCycleSummary || {},
+									)
 										.some((tcs) => tcs.taskDoneCount > 0))
 									? (
 										<tfoot class='text-sm divide-y divide-gray-100 '>
