@@ -22,6 +22,11 @@ export default function Home(
 ) {
 	return (
 		<>
+			<meta
+				name='viewport'
+				content='width=device-width, initial-scale=1.0'
+			>
+			</meta>
 			<div class='align-center justify-center flex'>
 				<div class='object-center flex flex-col p-2 py-6 m-h-screen w-1/2'>
 					{
