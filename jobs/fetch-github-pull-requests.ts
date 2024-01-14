@@ -10,43 +10,46 @@ import CursorModel from '../models/cursor.ts';
 
 import TaskModel from '../models/task.ts';
 import { upsertUserWeeklySummary } from '../controllers/user-weekly-summary.ts';
-import consumeGithubPagination from '../libs/consume-github-pagination.ts';
+import {
+	consumeGithubPaginationByCursor,
+	consumeGithubPaginationByDateTime,
+} from '../libs/consume-github-pagination.ts';
 
 export default function fetchGithubPullRequests(teams: Team[]) {
-	const defaultCursor = DateTime.now().setZone(TIMEZONE).startOf('month')
+	const mergedAt = DateTime.now().setZone(TIMEZONE).startOf('month')
 		.toISO() as string;
 	return Bluebird.mapSeries(teams, async (team) => {
 		const cursorKey = ['github', team];
 
 		const cursor = await CursorModel.get(cursorKey);
 
-		if (!cursor) {
-			await CursorModel.insert({
-				id: cursorKey,
-				cursor: defaultCursor,
-			});
-		}
-
 		const credentials = GITHUB_REPOSITORIES[team];
 
-		let lastCursor = cursor?.cursor || defaultCursor;
-
-		const response = await consumeGithubPagination({
-			weeklySummary: {},
-		}, {
-			team,
-			repository: credentials,
-			cursor: lastCursor,
-		});
-
-		await TaskModel.flush();
-
-		lastCursor = response.lastCursor || lastCursor;
+		const response = await (
+			cursor?.cursor
+				? consumeGithubPaginationByCursor({
+					weeklySummary: {},
+				}, {
+					team,
+					repository: credentials,
+					mergedAt,
+					before: cursor?.cursor,
+				})
+				: consumeGithubPaginationByDateTime({
+					weeklySummary: {},
+				}, {
+					team,
+					repository: credentials,
+					mergedAt,
+				})
+		);
 
 		await CursorModel.insert({
 			id: cursorKey,
-			cursor: lastCursor,
+			cursor: response.lastCursor || cursor?.cursor,
 		});
+
+		await TaskModel.flush();
 
 		await Bluebird.map(
 			toPairs(response.weeklySummary),

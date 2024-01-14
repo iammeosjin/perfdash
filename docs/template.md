@@ -1,4 +1,4 @@
-# Performance Scoring System (v0.0.1)
+# Performance Scoring System ({PROJECT_VERSION})
 
 ## Overview
 
@@ -17,11 +17,11 @@ products, faster, and with higher quality.
 For each pull request reviewed, developers will be awarded points as follows:
 
 - Junior Developers:
-  - If the junior developer is the first to review: 40 points
-  - If the junior developer is not the first to review: 10 points
+  - If the junior developer is the first to review: {JFPRR} points
+  - If the junior developer is not the first to review: {JPRR} points
 - Senior Developers:
-  - If the senior developer is the first to review: 40 points
-  - If the senior developer is not the first to review: 25 points
+  - If the senior developer is the first to review: {SFPRR} points
+  - If the senior developer is not the first to review: {SPRR} points
 
 ### Points for Pull Request Lead Time
 
@@ -65,24 +65,24 @@ The number of points awarded for completing tasks depends on the task type and
 the presence of subtasks:
 
 - Subtask:
-  - Junior Developers: 50 points
-  - Senior Developers: 20 points
+  - Junior Developers: {JSTDC} points
+  - Senior Developers: {SSTDC} points
 
 - Bug (with subtask):
-  - Junior Developers: 40 points
-  - Senior Developers: 15 points
+  - Junior Developers: {JBDCMAX} points
+  - Senior Developers: {SBDCMAX} points
 
 - Bug (without subtask):
-  - Junior Developers: 10 points
-  - Senior Developers: 1 points
+  - Junior Developers: {JBDCMIN} points
+  - Senior Developers: {SBDCMIN} points
 
 - Story (with subtask):
-  - Junior Developers: 40 points
-  - Senior Developers: 15 points
+  - Junior Developers: {JSDCMAX} points
+  - Senior Developers: {SSDCMAX} points
 
 - Story (without subtask):
-  - Junior Developers: 10 points
-  - Senior Developers: 1 points
+  - Junior Developers: {JSDCMIN} points
+  - Senior Developers: {SSDCMIN} points
 
 ### Points for Task Cycle Time
 

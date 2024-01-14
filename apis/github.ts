@@ -55,19 +55,25 @@ const REVIEWER_QUERY = `query pullRequests(
 const PULL_REQUEST_QUERY = `query pullRequests(
     $owner: String!
     $repo: String!
-    $first: Int = 100
+    $first: Int
+		$last: Int
     $after: String
+		$before: String
 ) {
     repository(owner: $owner, name: $repo) {
         pullRequests(
             first: $first
+						last: $last
             after: $after
+						before: $before
             orderBy: { field: UPDATED_AT, direction: DESC }
             states: [MERGED]
         ) {
             pageInfo {
                 hasNextPage
                 endCursor
+								startCursor
+								hasPreviousPage
             }
             nodes {
                 title
@@ -169,8 +175,17 @@ export class GithubAPI {
 		owner: string;
 		repo: string;
 		after?: string;
+		before?: string;
+		first?: number;
+		last?: number;
 	}): Promise<
-		{ pullRequests: PullRequest[]; after?: string; hasNextPage: boolean }
+		{
+			pullRequests: PullRequest[];
+			endCursor?: string;
+			startCursor?: string;
+			hasNextPage: boolean;
+			hasPreviousPage: boolean;
+		}
 	> {
 		const { repository } = await octokit.graphql(
 			PULL_REQUEST_QUERY,
@@ -179,7 +194,12 @@ export class GithubAPI {
 			repository: {
 				pullRequests: {
 					nodes: PullRequestResponse[];
-					pageInfo: { hasNextPage: boolean; endCursor?: string };
+					pageInfo: {
+						hasNextPage: boolean;
+						hasPreviousPage: boolean;
+						endCursor?: string;
+						startCursor?: string;
+					};
 				};
 			};
 		};
@@ -216,6 +236,7 @@ export class GithubAPI {
 					merged: pr.merged,
 					mergedAt: pr.mergedAt,
 					createdAt: pr.createdAt,
+					updatedAt: pr.updatedAt,
 					headRefName: pr.headRefName,
 					author: pr.author.login,
 					reviewers: reviewers,
@@ -244,8 +265,10 @@ export class GithubAPI {
 		);
 		return {
 			pullRequests,
-			after: repository.pullRequests.pageInfo.endCursor,
+			endCursor: repository.pullRequests.pageInfo.endCursor,
+			startCursor: repository.pullRequests.pageInfo.startCursor,
 			hasNextPage: repository.pullRequests.pageInfo.hasNextPage,
+			hasPreviousPage: repository.pullRequests.pageInfo.hasPreviousPage,
 		};
 	}
 }

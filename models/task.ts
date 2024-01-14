@@ -1,4 +1,6 @@
 import uniq from 'https://deno.land/x/ramda@v0.27.2/source/uniq.js';
+// @deno-types=npm:@types/luxon
+import { DateTime } from 'npm:luxon';
 // @deno-types=npm:@types/bluebird
 import Bluebird from 'npm:bluebird';
 import splitEvery from 'https://deno.land/x/ramda@v0.27.2/source/splitEvery.js';
@@ -11,16 +13,39 @@ import {
 	TaskStatus,
 	TaskType,
 } from '../types/task.ts';
+import { TIMEZONE } from '../libs/constants.ts';
 
 class Model extends DefaultModel<Task> {
 	private _queue: Map<string, Task>;
 
 	private _processedTaskCache: Set<string>;
 
+	private _lastProcessedDate: string | undefined;
+
 	constructor() {
 		super();
 		this._queue = new Map();
 		this._processedTaskCache = new Set();
+	}
+
+	set lastProcessedDate(date: string) {
+		this._lastProcessedDate = date;
+	}
+
+	clearProcessedTaskCache(cursor: string) {
+		if (!this._lastProcessedDate) return false;
+
+		if (
+			DateTime.fromISO(cursor).setZone(TIMEZONE)
+				.startOf('day').valueOf() <=
+				DateTime.fromISO(this._lastProcessedDate).setZone(TIMEZONE)
+					.startOf(
+						'day',
+					).valueOf()
+		) return false;
+
+		this._processedTaskCache.clear();
+		return true;
 	}
 
 	getPrefix() {

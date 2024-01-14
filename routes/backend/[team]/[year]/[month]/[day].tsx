@@ -27,6 +27,7 @@ import WeeklyPullRequestSummaryTable from '../../../../../islands/weekly-pull-re
 import reduceAndMerge from '../../../../../libs/reduce-and-merge.ts';
 import { TaskType } from '../../../../../types/task.ts';
 import WeeklyTaskSummaryTable from '../../../../../islands/weekly-task-summary-table.tsx';
+import CursorModel from '../../../../../models/cursor.ts';
 
 type PageProps = {
 	userWeeklySummaries: UserWeeklySummary[];

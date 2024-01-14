@@ -34,6 +34,7 @@ export type GithubAPIRepository = {
 export type PullRequest = {
 	merged: boolean;
 	mergedAt: string;
+	updatedAt: string;
 	createdAt: string;
 	headRefName: string;
 	author: string;

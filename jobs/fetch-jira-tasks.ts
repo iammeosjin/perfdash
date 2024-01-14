@@ -19,24 +19,29 @@ export default async function fetchJiraTasks(teams: Team[]) {
 
 		const cursorKey = ['jira', team];
 		const cursor = await CursorModel.get(cursorKey);
-		if (!cursor) {
+		if (!cursor?.cursor) {
 			await CursorModel.insert({
 				id: cursorKey,
 				cursor: defaultCursor,
 			});
 		}
 
+		TaskModel.clearProcessedTaskCache(new Date().toISOString());
 		const response = await consumeJiraPagination({ weeklySummary: {} }, {
 			cursor: cursor?.cursor || defaultCursor,
 			team: team,
 		});
 
-		await TaskModel.flush();
+		const lastCursor = new Date().toISOString();
 
 		await CursorModel.insert({
 			id: cursorKey,
-			cursor: new Date().toISOString(),
+			cursor: lastCursor,
 		});
+
+		await TaskModel.flush();
+
+		TaskModel.lastProcessedDate = lastCursor;
 
 		await Bluebird.mapSeries(
 			toPairs(response.weeklySummary),
