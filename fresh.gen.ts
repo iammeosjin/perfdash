@@ -9,11 +9,12 @@ import * as $api_jobs from './routes/api/jobs.ts';
 import * as $api_jobs_job_ from './routes/api/jobs/[job].ts';
 import * as $api_joke from './routes/api/joke.ts';
 import * as $api_users from './routes/api/users.ts';
-import * as $backend_team_year_month_day_ from './routes/backend/[team]/[year]/[month]/[day].tsx';
+import * as $backends_team_year_month_day_ from './routes/backends/[team]/[year]/[month]/[day].tsx';
 import * as $doc from './routes/doc.tsx';
 import * as $greet_name_ from './routes/greet/[name].tsx';
 import * as $index from './routes/index.tsx';
 import * as $version from './routes/version.ts';
+import * as $team_list_container from './islands/team-list-container.tsx';
 import * as $weekly_pull_request_summary_table from './islands/weekly-pull-request-summary-table.tsx';
 import * as $weekly_task_summary_table from './islands/weekly-task-summary-table.tsx';
 import { type Manifest } from '$fresh/server.ts';
@@ -27,14 +28,15 @@ const manifest = {
 		'./routes/api/jobs/[job].ts': $api_jobs_job_,
 		'./routes/api/joke.ts': $api_joke,
 		'./routes/api/users.ts': $api_users,
-		'./routes/backend/[team]/[year]/[month]/[day].tsx':
-			$backend_team_year_month_day_,
+		'./routes/backends/[team]/[year]/[month]/[day].tsx':
+			$backends_team_year_month_day_,
 		'./routes/doc.tsx': $doc,
 		'./routes/greet/[name].tsx': $greet_name_,
 		'./routes/index.tsx': $index,
 		'./routes/version.ts': $version,
 	},
 	islands: {
+		'./islands/team-list-container.tsx': $team_list_container,
 		'./islands/weekly-pull-request-summary-table.tsx':
 			$weekly_pull_request_summary_table,
 		'./islands/weekly-task-summary-table.tsx': $weekly_task_summary_table,

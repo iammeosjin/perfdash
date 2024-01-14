@@ -119,12 +119,6 @@ export const handler: Handlers = {
 			},
 		);
 
-		const headers = new Headers();
-		headers.set(
-			'Cache-Control',
-			'max-age=3600, no-store',
-		);
-
 		const footer = userWeeklySummaries.reduce((accum, curr) => {
 			const taskCycleSummary: Record<
 				TaskCycleSummaryType,
@@ -180,7 +174,7 @@ export const handler: Handlers = {
 				...footer,
 				weekNumber: date.weekNumber,
 			},
-		}, { headers });
+		});
 	},
 };
 

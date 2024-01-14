@@ -62,7 +62,8 @@ export default function WeeklyPullRequestSummaryTable(props: Props) {
 												<tr class='cursor-pointer'>
 													<td class='p-2 whitespace-nowrap'>
 														<UserImageHolder
-															user={user}
+															link={user.image}
+															name={user.name}
 														/>
 													</td>
 													<td class='p-2 whitespace-nowrap'>

@@ -82,7 +82,8 @@ export default function WeeklyTaskSummaryTable(props: Props) {
 												<tr>
 													<td class='p-2 whitespace-nowrap'>
 														<UserImageHolder
-															user={user}
+															link={user.image}
+															name={user.name}
 														/>
 													</td>
 													{(userWeeklySummary
