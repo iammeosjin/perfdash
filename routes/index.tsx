@@ -6,11 +6,17 @@ import TeamListContainer from '../islands/team-list-container.tsx';
 
 export const handler: Handlers = {
 	GET(_, ctx) {
+		const headers = new Headers();
+		headers.set(
+			'Cache-Control',
+			'max-age=3600, no-store',
+		);
+
 		const date = DateTime.now().toFormat('yyyy/MM/dd');
 		return ctx.render({
 			teams: Object.values(Team),
 			date,
-		});
+		}, { headers });
 	},
 };
 
