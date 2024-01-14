@@ -8,7 +8,7 @@ import { UserImageHolder } from '../components/user-image-holder.tsx';
 interface Props {
 	weekDateRange: string;
 	userWeeklySummaries: UserWeeklySummary[];
-	footer: WeeklySummaryPullRequesTableFooter;
+	footer?: WeeklySummaryPullRequesTableFooter;
 }
 
 export default function WeeklyPullRequestSummaryTable(props: Props) {
@@ -112,9 +112,9 @@ export default function WeeklyPullRequestSummaryTable(props: Props) {
 										},
 									)}
 								</tbody>
-								{footer.totalPullRequestCreated ||
-										footer.totalPullRequestReviewTime ||
-										footer.totalPullRequestReviewed
+								{footer?.totalPullRequestCreated ||
+										footer?.totalPullRequestReviewTime ||
+										footer?.totalPullRequestReviewed
 									? (
 										<tfoot class='text-sm divide-y divide-gray-100'>
 											<tr

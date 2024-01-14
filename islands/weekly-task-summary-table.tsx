@@ -12,7 +12,7 @@ import { UserImageHolder } from '../components/user-image-holder.tsx';
 interface Props {
 	weekDateRange: string;
 	userWeeklySummaries: UserWeeklySummary[];
-	footer: WeeklySummaryPullRequesTableFooter;
+	footer?: WeeklySummaryPullRequesTableFooter;
 }
 
 export default function WeeklyTaskSummaryTable(props: Props) {
@@ -147,7 +147,7 @@ export default function WeeklyTaskSummaryTable(props: Props) {
 									)}
 								</tbody>
 								{(Object.values(
-										footer.totalTaskCycleSummary || {},
+										footer?.totalTaskCycleSummary || {},
 									)
 										.some((tcs) => tcs.taskDoneCount > 0))
 									? (
@@ -164,11 +164,11 @@ export default function WeeklyTaskSummaryTable(props: Props) {
 													TaskCycleSummaryType.STORY,
 												].map((type) => {
 													const summary = footer
-														.totalTaskCycleSummary[
+														?.totalTaskCycleSummary[
 															type
 														];
 													const toolTipId =
-														`tooltip-total-${type}-done-${footer.weekNumber}`;
+														`tooltip-total-${type}-done-${footer?.weekNumber}`;
 													return (
 														<th class='p-2 whitespace-nowrap'>
 															<div
@@ -209,7 +209,7 @@ export default function WeeklyTaskSummaryTable(props: Props) {
 													<div>
 														{formatTime(
 															footer
-																.totalTaskCycleAverageTime,
+																?.totalTaskCycleAverageTime,
 														)}
 													</div>
 												</th>

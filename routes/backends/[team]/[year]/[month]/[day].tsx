@@ -5,12 +5,6 @@ import omit from 'https://deno.land/x/ramda@v0.27.2/source/omit.js';
 import equals from 'https://deno.land/x/ramda@v0.27.2/source/equals.js';
 import toPairs from 'https://deno.land/x/ramda@v0.27.2/source/toPairs.js';
 import fromPairs from 'https://deno.land/x/ramda@v0.27.2/source/fromPairs.js';
-import sort from 'https://deno.land/x/ramda@v0.27.2/source/sort.js';
-import sortBy from 'https://deno.land/x/ramda@v0.27.2/source/sortBy.js';
-import compose from 'https://deno.land/x/ramda@v0.27.2/source/compose.js';
-import toLower from 'https://deno.land/x/ramda@v0.27.2/source/toLower.js';
-import prop from 'https://deno.land/x/ramda@v0.27.2/source/prop.js';
-import descend from 'https://deno.land/x/ramda@v0.27.2/source/descend.js';
 import {
 	TaskCycleSummary,
 	TaskCycleSummaryType,

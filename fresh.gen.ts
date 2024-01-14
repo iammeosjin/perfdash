@@ -9,7 +9,10 @@ import * as $api_jobs from './routes/api/jobs.ts';
 import * as $api_jobs_job_ from './routes/api/jobs/[job].ts';
 import * as $api_joke from './routes/api/joke.ts';
 import * as $api_users from './routes/api/users.ts';
+import * as $backends_team_year_month_ from './routes/backends/[team]/[year]/[month].tsx';
 import * as $backends_team_year_month_day_ from './routes/backends/[team]/[year]/[month]/[day].tsx';
+import * as $backends_team_year_month_pull_requests from './routes/backends/[team]/[year]/[month]/pull-requests.tsx';
+import * as $backends_team_year_month_tasks from './routes/backends/[team]/[year]/[month]/tasks.tsx';
 import * as $doc from './routes/doc.tsx';
 import * as $greet_name_ from './routes/greet/[name].tsx';
 import * as $index from './routes/index.tsx';
@@ -28,8 +31,14 @@ const manifest = {
 		'./routes/api/jobs/[job].ts': $api_jobs_job_,
 		'./routes/api/joke.ts': $api_joke,
 		'./routes/api/users.ts': $api_users,
+		'./routes/backends/[team]/[year]/[month].tsx':
+			$backends_team_year_month_,
 		'./routes/backends/[team]/[year]/[month]/[day].tsx':
 			$backends_team_year_month_day_,
+		'./routes/backends/[team]/[year]/[month]/pull-requests.tsx':
+			$backends_team_year_month_pull_requests,
+		'./routes/backends/[team]/[year]/[month]/tasks.tsx':
+			$backends_team_year_month_tasks,
 		'./routes/doc.tsx': $doc,
 		'./routes/greet/[name].tsx': $greet_name_,
 		'./routes/index.tsx': $index,
