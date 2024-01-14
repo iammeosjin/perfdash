@@ -16,6 +16,7 @@ import * as $backends_team_year_month_tasks from './routes/backends/[team]/[year
 import * as $doc from './routes/doc.tsx';
 import * as $greet_name_ from './routes/greet/[name].tsx';
 import * as $index from './routes/index.tsx';
+import * as $teams from './routes/teams.tsx';
 import * as $version from './routes/version.ts';
 import * as $team_list_container from './islands/team-list-container.tsx';
 import * as $weekly_pull_request_summary_table from './islands/weekly-pull-request-summary-table.tsx';
@@ -42,6 +43,7 @@ const manifest = {
 		'./routes/doc.tsx': $doc,
 		'./routes/greet/[name].tsx': $greet_name_,
 		'./routes/index.tsx': $index,
+		'./routes/teams.tsx': $teams,
 		'./routes/version.ts': $version,
 	},
 	islands: {
