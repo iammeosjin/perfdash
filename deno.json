@@ -4,7 +4,7 @@
 		"cli": "echo \"import '\\$fresh/src/dev/cli.ts'\" | deno run --unstable -A -",
 		"manifest": "deno task cli manifest $(pwd)",
 		"dev": "env $(cat .env) deno run -A --unstable --watch=static/,routes/ dev.ts",
-		"start": "deno run -A --watch=static/,routes/ main.ts",
+		"start": "env $(cat .env) deno run -A --unstable --watch=static/,routes/ main.ts",
 		"build": "deno run -A dev.ts build",
 		"preview": "deno run -A main.ts",
 		"doc": "deno run -A --unstable scripts/update-doc.ts",

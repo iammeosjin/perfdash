@@ -9,5 +9,9 @@ import '$std/dotenv/load.ts';
 import { start } from '$fresh/server.ts';
 import manifest from './fresh.gen.ts';
 import config from './fresh.config.ts';
+import { hourly } from 'https://deno.land/x/deno_cron@v1.0.0/cron.ts';
+import updateSummaries from './jobs/update-summaries.ts';
+
+hourly(() => updateSummaries());
 
 await start(manifest, config);

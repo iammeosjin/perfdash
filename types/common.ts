@@ -14,6 +14,19 @@ export type IntegrationUser = {
 	user: ID;
 };
 
+export enum JobStatus {
+	READY = 'READY',
+	PROCESSING = 'PROCESSING',
+	DONE = 'DONE',
+	STOPPED = 'STOPPED',
+}
+
+export type Job = {
+	id: ID;
+	status: JobStatus;
+	body: Record<string, unknown>;
+};
+
 export type User =
 	& {
 		id: ID;

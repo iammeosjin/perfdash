@@ -5,6 +5,8 @@
 import * as $_404 from './routes/_404.tsx';
 import * as $_app from './routes/_app.tsx';
 import * as $api_team_metrics from './routes/api/[team]/metrics.ts';
+import * as $api_jobs from './routes/api/jobs.ts';
+import * as $api_jobs_job_ from './routes/api/jobs/[job].ts';
 import * as $api_joke from './routes/api/joke.ts';
 import * as $api_users from './routes/api/users.ts';
 import * as $backend_team_year_month_day_ from './routes/backend/[team]/[year]/[month]/[day].tsx';
@@ -20,6 +22,8 @@ const manifest = {
 		'./routes/_404.tsx': $_404,
 		'./routes/_app.tsx': $_app,
 		'./routes/api/[team]/metrics.ts': $api_team_metrics,
+		'./routes/api/jobs.ts': $api_jobs,
+		'./routes/api/jobs/[job].ts': $api_jobs_job_,
 		'./routes/api/joke.ts': $api_joke,
 		'./routes/api/users.ts': $api_users,
 		'./routes/backend/[team]/[year]/[month]/[day].tsx':
