@@ -7,36 +7,40 @@ interface Props {
 
 export default function TeamListContainer(props: Props) {
 	return (
-		<div
-			onClick={() =>
-				window.location =
-					`/backends/${props.team}/${props.date}` as unknown as Location}
-			class='flex items-center justify-between w-full p-2 sm:rounded-full lg:rounded-full md:rounded-full hover:bg-gray-100 cursor-pointer border-2 rounded-lg'
-		>
-			<div class='lg:flex md:flex sm:flex flex items-center'>
-				<div class='w-10 h-10 flex-shrink-0 mr-2 sm:mr-3'>
-					<img
-						class='rounded-full'
-						src={DEFAULT_IMAGE}
-						width='40'
-						height='40'
-						alt={props.team}
-					/>
-				</div>
-
-				<div class='flex flex-col'>
-					<div class='text-sm leading-3 text-gray-700 font-bold w-full'>
-						{props.team.toUpperCase()}
+		<section class='antialiased '>
+			<div
+				onClick={(e) => {
+					e.preventDefault();
+					window.location =
+						`/backends/${props.team}/${props.date}` as unknown as Location;
+				}}
+				class='flex items-center justify-between w-full p-2 sm:rounded-full lg:rounded-full md:rounded-full hover:bg-gray-100 cursor-pointer border-2 rounded-lg'
+			>
+				<div class='lg:flex md:flex sm:flex flex items-center'>
+					<div class='w-10 h-10 flex-shrink-0 mr-2 sm:mr-3'>
+						<img
+							class='rounded-full'
+							src={DEFAULT_IMAGE}
+							width='40'
+							height='40'
+							alt={props.team}
+						/>
 					</div>
 
-					<div class='text-xs text-gray-600 w-full'>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+					<div class='flex flex-col'>
+						<div class='text-sm leading-3 text-gray-700 font-bold w-full'>
+							{props.team.toUpperCase()}
+						</div>
+
+						<div class='text-xs text-gray-600 w-full'>
+							Lorem ipsum dolor sit amet, consectetur adipiscing
+							elit.
+						</div>
 					</div>
 				</div>
-			</div>
 
-			{
-				/* <svg
+				{
+					/* <svg
 				class='h-6 w-6 mr-1 invisible md:visible lg:visible xl:visible'
 				xmlns='http://www.w3.org/2000/svg'
 				viewBox='0 0 20 20'
@@ -48,7 +52,8 @@ export default function TeamListContainer(props: Props) {
 					clip-rule='evenodd'
 				/>
 			</svg> */
-			}
-		</div>
+				}
+			</div>
+		</section>
 	);
 }
