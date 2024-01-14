@@ -1,5 +1,4 @@
 import { Handlers } from '$fresh/server.ts';
-import UserModel from '../models/user.ts';
 // @deno-types=npm:@types/luxon
 import { DateTime } from 'npm:luxon';
 import { Team } from '../types/common.ts';
@@ -22,11 +21,6 @@ export default function Home(
 ) {
 	return (
 		<>
-			<meta
-				name='viewport'
-				content='width=device-width, initial-scale=1.0'
-			>
-			</meta>
 			<div class='align-center justify-center flex'>
 				<div class='object-center flex flex-col p-2 py-6 m-h-screen w-1/2'>
 					{

@@ -11,15 +11,16 @@ export default function TeamListContainer(props: Props) {
 			onClick={() =>
 				window.location =
 					`/backends/${props.team}/${props.date}` as unknown as Location}
-			class='flex items-center justify-between w-full p-2  hover:bg-gray-100 cursor-pointer border-2 rounded-lg'
+			class='flex items-center justify-between w-full p-2 sm:rounded-full lg:rounded-full md:rounded-full hover:bg-gray-100 cursor-pointer border-2 rounded-lg'
 		>
-			<div class='flex items-center'>
+			<div class='lg:flex md:flex sm:flex flex items-center'>
 				<div class='w-10 h-10 flex-shrink-0 mr-2 sm:mr-3'>
 					<img
 						class='rounded-full'
 						src={DEFAULT_IMAGE}
 						width='40'
 						height='40'
+						alt={props.team}
 					/>
 				</div>
 
@@ -33,9 +34,9 @@ export default function TeamListContainer(props: Props) {
 					</div>
 				</div>
 			</div>
+
 			{
-				/*
-			<svg
+				/* <svg
 				class='h-6 w-6 mr-1 invisible md:visible lg:visible xl:visible'
 				xmlns='http://www.w3.org/2000/svg'
 				viewBox='0 0 20 20'
