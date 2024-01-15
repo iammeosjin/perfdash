@@ -20,13 +20,6 @@ export default async function fetchClickupTasks(teams: Team[]) {
 		const cursor = await CursorModel.get(cursorKey);
 		const lastCursor = new Date().toISOString();
 
-		if (!cursor?.cursor) {
-			await CursorModel.insert({
-				id: cursorKey,
-				cursor: lastCursor,
-			});
-		}
-
 		const response = await consumeClickupPagination({ weeklySummary: {} }, {
 			dateStarted: cursor?.cursor || defaultCursor,
 			dateEnded: lastCursor,
