@@ -111,21 +111,21 @@ export async function clearUserWeeklySummary(team: Team) {
 	);
 
 	await Bluebird.map(
-		await CursorModel.list({ prefix: ['github'] }),
+		await CursorModel.list({ prefix: ['github', team] }),
 		async (cursor) => {
 			await CursorModel.delete(cursor.id);
 		},
 	);
 
 	await Bluebird.map(
-		await CursorModel.list({ prefix: ['clickup'] }),
+		await CursorModel.list({ prefix: ['clickup', team] }),
 		async (cursor) => {
 			await CursorModel.delete(cursor.id);
 		},
 	);
 
 	await Bluebird.map(
-		await CursorModel.list({ prefix: ['jira'] }),
+		await CursorModel.list({ prefix: ['jira', team] }),
 		async (cursor) => {
 			await CursorModel.delete(cursor.id);
 		},
