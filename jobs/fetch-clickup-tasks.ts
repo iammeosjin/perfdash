@@ -11,8 +11,7 @@ import { upsertUserWeeklySummary } from '../controllers/user-weekly-summary.ts';
 import consumeClickupPagination from '../libs/consume-clickup-pagination.ts';
 
 export default async function fetchClickupTasks(teams: Team[]) {
-	const defaultCursor = DateTime.now().setZone(TIMEZONE).minus({ days: 5 })
-		.startOf('week') //DateTime.now().setZone(TIMEZONE).startOf('month')
+	const defaultCursor = DateTime.now().setZone(TIMEZONE).startOf('month')
 		.toISO() as string;
 	await Bluebird.mapSeries(teams, async (team) => {
 		if (team !== Team.OPEXA) return null;
