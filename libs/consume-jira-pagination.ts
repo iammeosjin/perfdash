@@ -43,13 +43,13 @@ export default async function consumeJiraPagination(
 
 			const input = {
 				key: issue.key,
-				type: TaskModel.parseType(issue.type),
-				status: TaskModel.parseStatus(issue.status),
+				type: JiraAPI.parseType(issue.type),
+				status: JiraAPI.parseStatus(issue.status),
 				assignee: issue.assignee,
 				assigneeName: issue.assigneeName,
 				parent: issue.parent?.key,
 				parentType: issue.parent
-					? TaskModel.parseType(issue.parent.type)
+					? JiraAPI.parseType(issue.parent.type)
 					: undefined,
 				parentStatus: issue.parent?.status,
 				hasSubTasks: issue.hasSubtask,
@@ -75,8 +75,8 @@ export default async function consumeJiraPagination(
 					issue.subTasks,
 					async (subTask) => {
 						await TaskModel.enqueue({
-							type: TaskModel.parseType(subTask.type),
-							status: TaskModel.parseStatus(subTask.status),
+							type: JiraAPI.parseType(subTask.type),
+							status: JiraAPI.parseStatus(subTask.status),
 							parent: input.key,
 							key: subTask.key,
 							id: [options.team, subTask.key],
@@ -177,8 +177,8 @@ export default async function consumeJiraPagination(
 
 			if (userWeeklySummary.type === TaskCycleSummaryType.STORY) {
 				userWeeklySummary.taskCyclePoints += assignee.level === 1
-					? SCORE_METRICS.JUNIORS.SDC.MIN
-					: SCORE_METRICS.SENIORS.SDC.MIN;
+					? SCORE_METRICS.JUNIORS.SDC.MAX
+					: SCORE_METRICS.SENIORS.SDC.MAX;
 			} else if (userWeeklySummary.type === TaskCycleSummaryType.BUG) {
 				let taskCyclePoints = assignee.level === 1
 					? SCORE_METRICS.JUNIORS.BDC.MIN

@@ -10,6 +10,8 @@ import {
 	JiraRequestOptions,
 	JiraStatus,
 	JiraTask,
+	TaskStatus,
+	TaskType,
 } from '../types/task.ts';
 
 const issueTypes = {
@@ -29,6 +31,40 @@ const issueTypes = {
 } as Record<string, JiraIssueType>;
 
 export class JiraAPI {
+	static parseType(type: JiraIssueType) {
+		if (type === JiraIssueType.EPIC) return TaskType.EPIC;
+		if (type === JiraIssueType.STORY) return TaskType.STORY;
+		if (type === JiraIssueType.TASK) return TaskType.TASK;
+		if (type === JiraIssueType.BUG || type === JiraIssueType.HOTFIX) {
+			return TaskType.BUG;
+		}
+		if (type === JiraIssueType.DEFECT) return TaskType.DEFECT;
+		return TaskType.SUBTASK;
+	}
+
+	static parseStatus(type: JiraStatus) {
+		if (
+			[JiraStatus.UAT_FAILED_PRODUCTION, JiraStatus.UAT_FAILED_STAGING]
+				.includes(type)
+		) return TaskStatus.UAT_FAILED;
+		if (
+			[
+				JiraStatus.UAT_PRODUCTION,
+				JiraStatus.UAT_STAGING,
+				JiraStatus.READY_FOR_RELEASE,
+			]
+				.includes(type)
+		) return TaskStatus.UAT;
+
+		if (type === JiraStatus.DONE) return TaskStatus.DONE;
+
+		if (type === JiraStatus.IN_PROGRESS) return TaskStatus.IN_PROGRESS;
+
+		if (type === JiraStatus.READY) return TaskStatus.READY;
+
+		return TaskStatus.BACKLOG;
+	}
+
 	static async getIssues(
 		filter?: Partial<{ type: string; cursor: string }>,
 		options?: Partial<JiraRequestOptions>,

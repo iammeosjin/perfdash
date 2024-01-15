@@ -4,6 +4,7 @@ import { User } from '../types/common.ts';
 import JiraUserModel from '../models/jira-user.ts';
 import GithubUserModel from '../models/github-user.ts';
 import UserModel from '../models/user.ts';
+import ClickupUserModel from '../models/clickup-user.ts';
 
 const userCache = new Map<string, User | null>();
 
@@ -27,6 +28,13 @@ export async function createUser(user: User) {
 	if (user.github) {
 		await GithubUserModel.insert({
 			id: [user.github],
+			user: [username],
+		});
+	}
+
+	if (user.clickup) {
+		await ClickupUserModel.insert({
+			id: [user.clickup],
 			user: [username],
 		});
 	}
@@ -72,6 +80,21 @@ export async function getUserByJiraHandle(handle: string) {
 		if (!user) {
 			return null;
 		}
+	}
+
+	return user;
+}
+
+export async function getUserByClickupHandle(handle: string) {
+	let user = userCache.get(handle);
+
+	if (!user) {
+		const clickupUser = await ClickupUserModel.get([handle]);
+		if (!clickupUser) {
+			return null;
+		}
+
+		user = await UserModel.get(clickupUser.user);
 	}
 
 	return user;

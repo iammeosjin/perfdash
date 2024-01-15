@@ -20,6 +20,7 @@ import { WeeklySummaryPullRequesTableFooter } from '../../../../../types/ui.ts';
 import WeeklyPullRequestSummaryTable from '../../../../../islands/weekly-pull-request-summary-table.tsx';
 import reduceAndMerge from '../../../../../libs/reduce-and-merge.ts';
 import WeeklyTaskSummaryTable from '../../../../../islands/weekly-task-summary-table.tsx';
+import formatTime from '../../../../../libs/format-time.ts';
 
 type PageProps = {
 	userWeeklySummaries: UserWeeklySummary[];
@@ -95,7 +96,6 @@ export const handler: Handlers = {
 						taskCyclePoints: 0,
 					}, omit(['type'])(taskCycleSummary)]);
 				});
-
 				return {
 					...summary,
 					pullRequestSummary,

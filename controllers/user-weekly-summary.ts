@@ -118,6 +118,13 @@ export async function clearUserWeeklySummary(team: Team) {
 	);
 
 	await Bluebird.map(
+		await CursorModel.list({ prefix: ['clickup'] }),
+		async (cursor) => {
+			await CursorModel.delete(cursor.id);
+		},
+	);
+
+	await Bluebird.map(
 		await CursorModel.list({ prefix: ['jira'] }),
 		async (cursor) => {
 			await CursorModel.delete(cursor.id);

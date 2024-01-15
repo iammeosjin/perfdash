@@ -39,6 +39,7 @@ export type User =
 		slack: string;
 		github: string;
 		jira: string;
+		clickup: string;
 		teams: Team[];
 		image: string;
 		role: 'SA' | 'INFRA';

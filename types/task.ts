@@ -58,6 +58,71 @@ export type JiraChangeLogResponse = {
 	}[];
 };
 
+export enum ClickupTaskType {
+	MILESTONE = 'Milestone',
+	EPIC = 'Epic',
+	BUG = 'Bug',
+	TASK = 'Task',
+	STORY = 'Story',
+	DEFECT = 'Defect',
+	SUPERTASK = 'Supertask',
+	SUPPORT = 'Support',
+}
+
+export enum ClickupStatus {
+	TO_DO = 'to do',
+	READY = 'ready',
+	IN_PROGRESS = 'in progress',
+	DONE = 'done',
+	CLOSED = 'Closed',
+}
+
+export type ClickupTask = {
+	key: string;
+	assignee: string;
+	type: ClickupTaskType;
+	dateCreated: string;
+	dateUpdated: string;
+	dateDone?: string;
+	status: ClickupStatus;
+	parent?: string;
+	creator: string;
+};
+
+export type ClickupTaskCustomField = {
+	id: string;
+	name: string;
+	type_config: {
+		options: [{
+			name: string;
+			orderindex: number;
+		}];
+	};
+	value: number;
+};
+
+export type ClickupTasksResponse = {
+	id: string;
+	custom_id: string;
+	status: {
+		status: ClickupStatus;
+	};
+	date_updated: string;
+	date_created: string;
+	date_closed?: string;
+	date_done?: string;
+	creator: {
+		id: number;
+	};
+	assignees: { id: number }[];
+	parent?: string;
+	custom_fields: ClickupTaskCustomField[];
+};
+
+export type ClickupRequestOption = {
+	page: number;
+};
+
 export type JiraRequestOptions = {
 	startAt: number;
 	maxResults: number;
@@ -71,6 +136,7 @@ export enum TaskType {
 	SUBTASK = 'SUB_TASK',
 	STORY = 'STORY',
 	DEFECT = 'DEFECT',
+	SUPPORT = 'SUPPORT',
 }
 
 export enum TaskStatus {

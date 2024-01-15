@@ -1,5 +1,6 @@
 import { Handlers } from '$fresh/server.ts';
 import { clearUserWeeklySummary } from '../../../controllers/user-weekly-summary.ts';
+import fetchClickupTasks from '../../../jobs/fetch-clickup-tasks.ts';
 import fetchGithubPullRequests from '../../../jobs/fetch-github-pull-requests.ts';
 import fetchJiraTasks from '../../../jobs/fetch-jira-tasks.ts';
 import { Team } from '../../../types/common.ts';
@@ -9,7 +10,7 @@ export const handler: Handlers = {
 
 		const headers = new Headers();
 
-		let metrics = ['jira', 'github'];
+		let metrics = ['jira', 'github', 'clickup'];
 
 		if (rawBody) {
 			const body = JSON.parse(rawBody);
@@ -23,6 +24,10 @@ export const handler: Handlers = {
 
 		if (metrics.includes('jira')) {
 			await fetchJiraTasks([ctx.params.team as Team]);
+		}
+
+		if (metrics.includes('clickup')) {
+			await fetchClickupTasks([ctx.params.team as Team]);
 		}
 
 		return new Response(JSON.stringify(true, null, 2), {

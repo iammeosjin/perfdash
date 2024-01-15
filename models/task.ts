@@ -6,13 +6,7 @@ import Bluebird from 'npm:bluebird';
 import splitEvery from 'https://deno.land/x/ramda@v0.27.2/source/splitEvery.js';
 import DefaultModel from '../libs/model.ts';
 import { ID, Team } from '../types/common.ts';
-import {
-	JiraIssueType,
-	JiraStatus,
-	Task,
-	TaskStatus,
-	TaskType,
-} from '../types/task.ts';
+import { Task, TaskStatus } from '../types/task.ts';
 import { TIMEZONE } from '../libs/constants.ts';
 
 class Model extends DefaultModel<Task> {
@@ -54,40 +48,6 @@ class Model extends DefaultModel<Task> {
 
 	generateId(id: ID) {
 		return [this.getPrefix(), ...id];
-	}
-
-	parseType(type: JiraIssueType) {
-		if (type === JiraIssueType.EPIC) return TaskType.EPIC;
-		if (type === JiraIssueType.STORY) return TaskType.STORY;
-		if (type === JiraIssueType.TASK) return TaskType.TASK;
-		if (type === JiraIssueType.BUG || type === JiraIssueType.HOTFIX) {
-			return TaskType.BUG;
-		}
-		if (type === JiraIssueType.DEFECT) return TaskType.DEFECT;
-		return TaskType.SUBTASK;
-	}
-
-	parseStatus(type: JiraStatus) {
-		if (
-			[JiraStatus.UAT_FAILED_PRODUCTION, JiraStatus.UAT_FAILED_STAGING]
-				.includes(type)
-		) return TaskStatus.UAT_FAILED;
-		if (
-			[
-				JiraStatus.UAT_PRODUCTION,
-				JiraStatus.UAT_STAGING,
-				JiraStatus.READY_FOR_RELEASE,
-			]
-				.includes(type)
-		) return TaskStatus.UAT;
-
-		if (type === JiraStatus.DONE) return TaskStatus.DONE;
-
-		if (type === JiraStatus.IN_PROGRESS) return TaskStatus.IN_PROGRESS;
-
-		if (type === JiraStatus.READY) return TaskStatus.READY;
-
-		return TaskStatus.BACKLOG;
 	}
 
 	async hasProcessTask(params: {

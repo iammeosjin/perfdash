@@ -1,5 +1,6 @@
 import JobModel from '../models/job.ts';
 import { JobStatus, Team } from '../types/common.ts';
+import fetchClickupTasks from './fetch-clickup-tasks.ts';
 import fetchGithubPullRequests from './fetch-github-pull-requests.ts';
 import fetchJiraTasks from './fetch-jira-tasks.ts';
 
@@ -28,6 +29,18 @@ export default async function updateSummaries() {
 
 	console.log('processing jira job');
 	await fetchJiraTasks([Team.NEXIUX]);
+
+	await JobModel.insert({
+		...job,
+		status: JobStatus.PROCESSING,
+		body: { api: ['github', 'jira', 'clickup'] },
+	});
+
+	console.log('processing clickup job');
+	await fetchClickupTasks([Team.OPEXA]);
+
+	console.log('processing done');
+
 	await JobModel.insert({
 		...job,
 		status: JobStatus.READY,
