@@ -9,6 +9,7 @@ import * as $api_jobs from './routes/api/jobs.ts';
 import * as $api_jobs_job_ from './routes/api/jobs/[job].ts';
 import * as $api_joke from './routes/api/joke.ts';
 import * as $api_users from './routes/api/users.ts';
+import * as $backends_team_ from './routes/backends/[team].tsx';
 import * as $backends_team_year_month_ from './routes/backends/[team]/[year]/[month].tsx';
 import * as $backends_team_year_month_day_ from './routes/backends/[team]/[year]/[month]/[day].tsx';
 import * as $backends_team_year_month_pull_requests from './routes/backends/[team]/[year]/[month]/pull-requests.tsx';
@@ -20,6 +21,7 @@ import * as $teams from './routes/teams.tsx';
 import * as $version from './routes/version.ts';
 import * as $team_list_container from './islands/team-list-container.tsx';
 import * as $weekly_pull_request_summary_table from './islands/weekly-pull-request-summary-table.tsx';
+import * as $weekly_standings from './islands/weekly-standings.tsx';
 import * as $weekly_task_summary_table from './islands/weekly-task-summary-table.tsx';
 import { type Manifest } from '$fresh/server.ts';
 
@@ -32,6 +34,7 @@ const manifest = {
 		'./routes/api/jobs/[job].ts': $api_jobs_job_,
 		'./routes/api/joke.ts': $api_joke,
 		'./routes/api/users.ts': $api_users,
+		'./routes/backends/[team].tsx': $backends_team_,
 		'./routes/backends/[team]/[year]/[month].tsx':
 			$backends_team_year_month_,
 		'./routes/backends/[team]/[year]/[month]/[day].tsx':
@@ -50,6 +53,7 @@ const manifest = {
 		'./islands/team-list-container.tsx': $team_list_container,
 		'./islands/weekly-pull-request-summary-table.tsx':
 			$weekly_pull_request_summary_table,
+		'./islands/weekly-standings.tsx': $weekly_standings,
 		'./islands/weekly-task-summary-table.tsx': $weekly_task_summary_table,
 	},
 	baseUrl: import.meta.url,
