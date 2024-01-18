@@ -6,5 +6,6 @@ export type WeeklySummaryPullRequesTableFooter = {
 	totalPullRequestReviewTime: number;
 	totalPullRequestReviewed: number;
 	totalTaskCycleAverageTime: number;
+	totalTaskCreated: number;
 	totalTaskCycleSummary: Record<TaskCycleSummaryType, TaskCycleSummary>;
 };

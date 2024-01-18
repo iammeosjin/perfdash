@@ -41,6 +41,14 @@ export default function WeeklyTaskSummaryTable(props: Props) {
 											</div>
 										</th>
 										<th
+											rowSpan={2}
+											class='p-2 whitespace-nowrap align-middle'
+										>
+											<div class='font-semibold text-center'>
+												Cards Created
+											</div>
+										</th>
+										<th
 											colSpan={4}
 											class='p-2 whitespace-nowrap w-1/3 text-center '
 										>
@@ -49,7 +57,7 @@ export default function WeeklyTaskSummaryTable(props: Props) {
 											</div>
 										</th>
 										<th
-											rowSpan={1}
+											rowSpan={2}
 											class='p-2 whitespace-nowrap align-middle'
 										>
 											<div class='font-semibold text-left'>
@@ -86,6 +94,13 @@ export default function WeeklyTaskSummaryTable(props: Props) {
 															name={user.name}
 														/>
 													</td>
+													<td class='p-2 whitespace-nowrap'>
+														<div class='text-center'>
+															{userWeeklySummary
+																.tasksCreated}
+														</div>
+													</td>
+
 													{(userWeeklySummary
 														.taskCycleSummaries ||
 														[])
@@ -153,9 +168,12 @@ export default function WeeklyTaskSummaryTable(props: Props) {
 									? (
 										<tfoot class='text-sm divide-y divide-gray-100 '>
 											<tr
-												class={`font-semibold text-left`}
+												class={`font-semibold text-center`}
 											>
 												<th class='p-2 whitespace-nowrap'>
+												</th>
+												<th class='p-2 whitespace-nowrap'>
+													{footer?.totalTaskCreated}
 												</th>
 
 												{[

@@ -23,7 +23,10 @@ import {
 import reduceAndMerge from './reduce-and-merge.ts';
 
 type JiraResponse = {
-	weeklySummary: Record<string, { user: ID } & TaskCycleSummary>;
+	weeklySummary: Record<
+		string,
+		{ user: ID; tasksCreated: string[] } & TaskCycleSummary
+	>;
 };
 
 export default async function consumeJiraPagination(
@@ -80,8 +83,6 @@ export default async function consumeJiraPagination(
 
 			await TaskModel.enqueue(input);
 
-			console.log('test');
-
 			if (issue.hasSubtask) {
 				const subTasks = await Bluebird.map(
 					issue.subTasks,
@@ -124,20 +125,6 @@ export default async function consumeJiraPagination(
 				return weeklySummary;
 			}
 
-			if (issue.status !== JiraStatus.DONE) {
-				return weeklySummary;
-			}
-
-			if (!issue.assignee) {
-				return weeklySummary;
-			}
-
-			const assignee = await getUserByJiraHandle(issue.assignee.id);
-
-			if (!assignee) {
-				return weeklySummary;
-			}
-
 			const dateTimeMovedToInprogress = DateTime.fromISO(
 				issue.movedToInProgress || issue.created,
 			);
@@ -153,6 +140,39 @@ export default async function consumeJiraPagination(
 			const startOfWeek = dateTimeMovedToDone.startOf('week').setZone(
 				TIMEZONE,
 			).toISO() as string;
+
+			const reporter = await getUserByJiraHandle(issue.reporter.id);
+
+			if (reporter) {
+				const reporterKey = [
+					startOfWeek,
+					issue.reporter.id,
+				].join(';');
+
+				const userWeeklySummary = weeklySummary[reporterKey] || {};
+
+				userWeeklySummary.user = reporter ? reporter.id : [];
+				userWeeklySummary.tasksCreated = [
+					...userWeeklySummary.tasksCreated || [],
+					issue.key,
+				];
+
+				weeklySummary[reporterKey] = userWeeklySummary;
+			}
+
+			if (issue.status !== JiraStatus.DONE) {
+				return weeklySummary;
+			}
+
+			if (!issue.assignee) {
+				return weeklySummary;
+			}
+
+			const assignee = await getUserByJiraHandle(issue.assignee.id);
+
+			if (!assignee) {
+				return weeklySummary;
+			}
 
 			let taskCycleSummaryType = TaskCycleSummaryType.TASK;
 

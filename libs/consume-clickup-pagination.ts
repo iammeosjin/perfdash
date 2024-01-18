@@ -23,7 +23,10 @@ import { ClickupAPI } from '../apis/clickup.ts';
 import TaskModel from '../models/task.ts';
 
 type JiraResponse = {
-	weeklySummary: Record<string, { user: ID } & TaskCycleSummary>;
+	weeklySummary: Record<
+		string,
+		{ user: ID; tasksCreated: string[] } & TaskCycleSummary
+	>;
 };
 
 export default async function consumeClickupPagination(
@@ -111,6 +114,33 @@ export default async function consumeClickupPagination(
 				return weeklySummary;
 			}
 
+			const reporter = await getUserByClickupHandle(task.creator.id);
+
+			const startOfWeek = DateTime.fromMillis(
+				+(task.dateDone || task.dateUpdated),
+			).startOf(
+				'week',
+			).setZone(
+				TIMEZONE,
+			).toISO() as string;
+
+			if (reporter) {
+				const reporterKey = [
+					startOfWeek,
+					task.creator.id,
+				].join(';');
+
+				const userWeeklySummary = weeklySummary[reporterKey] || {};
+
+				userWeeklySummary.user = reporter ? reporter.id : [];
+				userWeeklySummary.tasksCreated = [
+					...userWeeklySummary.tasksCreated || [],
+					task.key,
+				];
+
+				weeklySummary[reporterKey] = userWeeklySummary;
+			}
+
 			if (status !== TaskStatus.DONE) {
 				return weeklySummary;
 			}
@@ -134,14 +164,6 @@ export default async function consumeClickupPagination(
 			} else if (type === TaskType.EPIC) {
 				taskCycleSummaryType = TaskCycleSummaryType.EPIC;
 			}
-
-			const startOfWeek = DateTime.fromMillis(
-				+(task.dateDone || task.dateUpdated),
-			).startOf(
-				'week',
-			).setZone(
-				TIMEZONE,
-			).toISO() as string;
 
 			const assigneeKey = [
 				startOfWeek,

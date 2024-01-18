@@ -4,6 +4,7 @@ import { DateTime } from 'npm:luxon';
 import Bluebird from 'npm:bluebird';
 import omit from 'https://deno.land/x/ramda@v0.27.2/source/omit.js';
 import toPairs from 'https://deno.land/x/ramda@v0.27.2/source/toPairs.js';
+import isEmpty from 'https://deno.land/x/ramda@v0.27.2/source/isEmpty.js';
 import { ID, TaskCycleSummary, Team } from '../types/common.ts';
 import { TIMEZONE } from '../libs/constants.ts';
 import CursorModel from '../models/cursor.ts';
@@ -36,17 +37,22 @@ export default async function fetchClickupTasks(teams: Team[]) {
 			async (
 				[key, weeklySummary]: [
 					string,
-					{ user: ID } & TaskCycleSummary,
+					{ user: ID; tasksCreated: string[] } & TaskCycleSummary,
 				],
 			) => {
 				const [startOfWeek] = key.split(';');
 
 				if (weeklySummary.user.length === 0) return;
+				const input = omit(['user', 'tasksCreated'])(weeklySummary);
+				if (
+					isEmpty(weeklySummary?.tasksCreated || []) && isEmpty(input)
+				) return;
 				await upsertUserWeeklySummary({
 					team,
 					date: startOfWeek,
 					user: weeklySummary.user,
-					taskCycleSummary: omit(['user'])(weeklySummary),
+					taskCycleSummary: input,
+					tasksCreated: weeklySummary.tasksCreated,
 				});
 			},
 		);

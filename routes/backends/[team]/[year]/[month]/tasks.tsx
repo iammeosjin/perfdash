@@ -89,6 +89,7 @@ export const handler: Handlers = {
 
 				return {
 					...summary,
+					tasksCreated: summary?.tasksCreated?.length || 0,
 					pullRequestSummary,
 					taskCycleSummaries,
 					taskCycleAverageTime: taskCycleSummaries.reduce(

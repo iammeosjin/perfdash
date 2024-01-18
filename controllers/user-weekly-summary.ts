@@ -14,6 +14,7 @@ import { TIMEZONE } from '../libs/constants.ts';
 import CursorModel from '../models/cursor.ts';
 import omit from 'https://deno.land/x/ramda@v0.27.2/source/omit.js';
 import TaskModel from '../models/task.ts';
+import uniq from 'https://deno.land/x/ramda@v0.27.2/source/uniq.js';
 
 export async function upsertUserWeeklySummary(
 	input: {
@@ -22,6 +23,7 @@ export async function upsertUserWeeklySummary(
 		user: ID;
 		pullRequestSummary?: PullRequestSummary;
 		taskCycleSummary?: TaskCycleSummary;
+		tasksCreated?: string[];
 	},
 ) {
 	const startOfWeek = DateTime.fromISO(input.date).setZone(TIMEZONE).startOf(
@@ -37,8 +39,6 @@ export async function upsertUserWeeklySummary(
 	});
 
 	const userWeeklySummary = await UserWeeklySummaryModel.get(id);
-
-	const debug = false;
 
 	let pullRequestSummary: PullRequestSummary | undefined = userWeeklySummary
 		?.pullRequestSummary;
@@ -72,25 +72,16 @@ export async function upsertUserWeeklySummary(
 				input.taskCycleSummary,
 			];
 		}
-
-		if (debug) {
-			console.log(
-				'existingTaskCycleSummary',
-				existingTaskCycleSummary,
-				taskCycleSummaries,
-			);
-		}
 	}
 
-	if (debug) {
-		console.log('inserting', {
-			id,
-			user: input.user,
-			weekNumber: startOfWeek.weekNumber,
-			weekYear: startOfWeek.weekYear,
-			pullRequestSummary: pullRequestSummary,
-			taskCycleSummaries,
-		});
+	let tasksCreated: string[] | undefined = userWeeklySummary
+		?.tasksCreated;
+
+	if (input.tasksCreated) {
+		tasksCreated = uniq([
+			...(tasksCreated || []),
+			...input.tasksCreated,
+		]);
 	}
 
 	await UserWeeklySummaryModel.insert({
@@ -100,6 +91,7 @@ export async function upsertUserWeeklySummary(
 		weekYear: startOfWeek.weekYear,
 		pullRequestSummary: pullRequestSummary,
 		taskCycleSummaries,
+		tasksCreated,
 	});
 }
 

@@ -10,6 +10,7 @@ import CursorModel from '../models/cursor.ts';
 import TaskModel from '../models/task.ts';
 import { upsertUserWeeklySummary } from '../controllers/user-weekly-summary.ts';
 import consumeJiraPagination from '../libs/consume-jira-pagination.ts';
+import isEmpty from 'https://deno.land/x/ramda@v0.27.2/source/isEmpty.js';
 
 export default async function fetchJiraTasks(teams: Team[]) {
 	const defaultCursor = DateTime.now().setZone(TIMEZONE).startOf('month')
@@ -37,17 +38,22 @@ export default async function fetchJiraTasks(teams: Team[]) {
 			async (
 				[key, weeklySummary]: [
 					string,
-					{ user: ID } & TaskCycleSummary,
+					{ user: ID; tasksCreated: string[] } & TaskCycleSummary,
 				],
 			) => {
 				const [startOfWeek] = key.split(';');
 
 				if (weeklySummary.user.length === 0) return;
+				const input = omit(['user', 'tasksCreated'])(weeklySummary);
+				if (
+					isEmpty(weeklySummary?.tasksCreated || []) && isEmpty(input)
+				) return;
 				await upsertUserWeeklySummary({
 					team,
 					date: startOfWeek,
 					user: weeklySummary.user,
-					taskCycleSummary: omit(['user'])(weeklySummary),
+					taskCycleSummary: input,
+					tasksCreated: weeklySummary.tasksCreated,
 				});
 			},
 		);

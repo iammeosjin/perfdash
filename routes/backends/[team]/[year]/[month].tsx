@@ -8,7 +8,6 @@ import {
 	TaskCycleSummary,
 	TaskCycleSummaryType,
 	Team,
-	UserWeeklySummary,
 	WeeklySummary,
 } from '../../../../types/common.ts';
 import { TIMEZONE } from '../../../../libs/constants.ts';
@@ -95,6 +94,7 @@ export const handler: Handlers = {
 				return {
 					...summary,
 					pullRequestSummary,
+					tasksCreated: summary?.tasksCreated?.length || 0,
 					taskCycleSummaries,
 					taskCycleAverageTime: taskCycleSummaries.reduce(
 						(avg, curr) => {
@@ -123,6 +123,7 @@ export const handler: Handlers = {
 						{};
 					return {
 						...reduceAndMerge([accum || {}, {
+							totalTaskCreated: curr.tasksCreated || 0,
 							totalPullRequestReviewed:
 								curr.pullRequestSummary?.pullRequestReviewed ||
 								0,
@@ -381,6 +382,14 @@ export default function Home(
 												</div>
 											</th>
 											<th
+												rowSpan={2}
+												class='p-2 whitespace-nowrap w-1/3 text-center '
+											>
+												<div class='font-semibold text-center'>
+													Cards Created
+												</div>
+											</th>
+											<th
 												colSpan={4}
 												class='p-2 whitespace-nowrap w-1/3 text-center '
 											>
@@ -435,6 +444,7 @@ export default function Home(
 																		{weekNumber}
 																	</div>
 																</div>
+
 																<div
 																	id={`tooltip-date-${weekNumber}`}
 																	role='tooltip'
@@ -455,6 +465,14 @@ export default function Home(
 																</div>
 															</div>
 														</td>
+														<td class='p-2 whitespace-nowrap'>
+															<div class='text-center'>
+																{summary
+																	.totalTaskCreated ||
+																	0}
+															</div>
+														</td>
+
 														{[
 															TaskCycleSummaryType
 																.TASK,

@@ -73,6 +73,7 @@ export type WeeklySummary = {
 	weekYear: number;
 	pullRequestSummary?: PullRequestSummary;
 	taskCycleSummaries?: TaskCycleSummary[];
+	tasksCreated?: string[];
 };
 
 export type UserWeeklySummary = {
@@ -83,6 +84,7 @@ export type UserWeeklySummary = {
 	pullRequestSummary?: PullRequestSummary;
 	taskCycleSummaries?: TaskCycleSummary[];
 	taskCycleAverageTime: number;
+	tasksCreated: number;
 };
 
 export type CycleTimeMetrics = {

@@ -101,6 +101,7 @@ export const handler: Handlers = {
 					...summary,
 					pullRequestSummary,
 					taskCycleSummaries,
+					tasksCreated: summary?.tasksCreated?.length || 0,
 					taskCycleAverageTime: taskCycleSummaries.reduce(
 						(avg, curr) => {
 							return avg +
@@ -126,6 +127,7 @@ export const handler: Handlers = {
 			const totalTaskCycleSummary = accum.totalTaskCycleSummary || {};
 			return {
 				...reduceAndMerge([accum || {}, {
+					totalTaskCreated: curr.tasksCreated || 0,
 					totalPullRequestReviewed:
 						curr.pullRequestSummary?.pullRequestReviewed || 0,
 					totalPullRequestCreated:

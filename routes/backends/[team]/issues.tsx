@@ -1,9 +1,7 @@
 import { Handlers } from '$fresh/server.ts';
 import { Head } from '$fresh/runtime.ts';
-import allPass from 'https://deno.land/x/ramda@v0.27.2/source/allPass.js';
 import reject from 'https://deno.land/x/ramda@v0.27.2/source/reject.js';
 import isNil from 'https://deno.land/x/ramda@v0.27.2/source/isNil.js';
-import { Team, User } from '../../../types/common.ts';
 import {
 	getUserByClickupHandle,
 	getUserByJiraHandle,
@@ -16,29 +14,13 @@ function cleanObject<T = Record<string, unknown>>(obj: T) {
 	return reject(isNil)(obj);
 }
 
-const userCache = new Map<string, User | null>();
-async function getUser(handle: string, team: Team) {
-	let user = userCache.get(handle);
-	if (!user) {
-		user = await (team === Team.NEXIUX
-			? getUserByJiraHandle(handle)
-			: getUserByClickupHandle(handle));
-		userCache.set(handle, user);
-	}
-	return user;
-}
-
 export const handler: Handlers = {
 	async GET(_, ctx) {
 		const issues = await TaskModel.list({ prefix: [ctx.params.team] });
 
 		return ctx.render({
 			issues: issues.filter((issue) =>
-				allPass([
-					!!issue.reporter,
-					issue.status !== TaskStatus.BACKLOG,
-					issue.status !== TaskStatus.READY,
-				])
+				!!issue.reporter && issue.status === TaskStatus.DONE
 			),
 		});
 	},
