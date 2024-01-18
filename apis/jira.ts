@@ -31,7 +31,7 @@ const issueTypes = {
 } as Record<string, JiraIssueType>;
 
 export class JiraAPI {
-	static parseType(type: JiraIssueType) {
+	static parseType(type: JiraIssueType): TaskType {
 		if (type === JiraIssueType.EPIC) return TaskType.EPIC;
 		if (type === JiraIssueType.STORY) return TaskType.STORY;
 		if (type === JiraIssueType.TASK) return TaskType.TASK;
@@ -42,7 +42,7 @@ export class JiraAPI {
 		return TaskType.SUBTASK;
 	}
 
-	static parseStatus(type: JiraStatus) {
+	static parseStatus(type: JiraStatus): TaskStatus {
 		if (
 			[JiraStatus.UAT_FAILED_PRODUCTION, JiraStatus.UAT_FAILED_STAGING]
 				.includes(type)
@@ -100,6 +100,7 @@ export class JiraAPI {
 					'parent',
 					'issuetype',
 					'assignee',
+					'reporter',
 					'statuscategorychangedate',
 					'created',
 					'updated',
@@ -143,9 +144,18 @@ export class JiraAPI {
 					};
 				});
 				return {
+					summary: issue.fields.summary,
 					key: issue.key,
-					assignee: issue.fields?.assignee?.accountId,
-					assigneeName: issue.fields?.assignee?.displayName,
+					assignee: issue.fields?.assignee
+						? {
+							id: issue.fields?.assignee?.accountId,
+							name: issue.fields?.assignee?.displayName,
+						}
+						: undefined,
+					reporter: {
+						id: issue.fields?.reporter?.accountId,
+						name: issue.fields?.reporter?.displayName,
+					},
 					parent,
 					hasSubtask: subTasks.length > 0,
 					subTasks,

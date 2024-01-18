@@ -14,7 +14,12 @@ import { SCORE_METRICS, TIMEZONE } from './constants.ts';
 import TaskModel from '../models/task.ts';
 import { JiraAPI } from '../apis/jira.ts';
 import omit from 'https://deno.land/x/ramda@v0.27.2/source/omit.js';
-import { JiraRequestOptions, JiraStatus, TaskType } from '../types/task.ts';
+import {
+	JiraRequestOptions,
+	JiraStatus,
+	Task,
+	TaskType,
+} from '../types/task.ts';
 import reduceAndMerge from './reduce-and-merge.ts';
 
 type JiraResponse = {
@@ -41,20 +46,25 @@ export default async function consumeJiraPagination(
 		async (weeklySummary, issue) => {
 			const debug = false;
 
-			const input = {
+			const input: Omit<Task, 'pullRequests' | 'subTasks'> = {
 				key: issue.key,
+				summary: issue.summary,
+				link: `https://identifi.atlassian.net/browse/${issue.key}`,
 				type: JiraAPI.parseType(issue.type),
 				status: JiraAPI.parseStatus(issue.status),
 				assignee: issue.assignee,
-				assigneeName: issue.assigneeName,
-				parent: issue.parent?.key,
-				parentType: issue.parent
-					? JiraAPI.parseType(issue.parent.type)
+				reporter: issue.reporter,
+				parent: issue.parent
+					? {
+						key: issue.parent.key,
+						type: JiraAPI.parseType(issue.parent.type),
+						status: JiraAPI.parseStatus(issue.parent.status),
+					}
 					: undefined,
-				parentStatus: issue.parent?.status,
 				hasSubTasks: issue.hasSubtask,
 				dateTimeCreated: issue.created,
 				dateTimeMovedToInprogress: issue.movedToInProgress,
+				dateTimeMovedToDone: issue.statusCategoryChangeDate,
 				id: [options.team, issue.key],
 			};
 
@@ -77,7 +87,7 @@ export default async function consumeJiraPagination(
 						await TaskModel.enqueue({
 							type: JiraAPI.parseType(subTask.type),
 							status: JiraAPI.parseStatus(subTask.status),
-							parent: input.key,
+							parent: input.parent,
 							key: subTask.key,
 							id: [options.team, subTask.key],
 						});
@@ -119,7 +129,7 @@ export default async function consumeJiraPagination(
 				return weeklySummary;
 			}
 
-			const assignee = await getUserByJiraHandle(issue.assignee);
+			const assignee = await getUserByJiraHandle(issue.assignee.id);
 
 			if (!assignee) {
 				return weeklySummary;
@@ -155,7 +165,7 @@ export default async function consumeJiraPagination(
 
 			const assigneeKey = [
 				startOfWeek,
-				issue.assignee,
+				issue.assignee.id,
 				taskCycleSummaryType,
 			].join(';');
 

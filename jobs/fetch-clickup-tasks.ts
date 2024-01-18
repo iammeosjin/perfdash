@@ -9,6 +9,7 @@ import { TIMEZONE } from '../libs/constants.ts';
 import CursorModel from '../models/cursor.ts';
 import { upsertUserWeeklySummary } from '../controllers/user-weekly-summary.ts';
 import consumeClickupPagination from '../libs/consume-clickup-pagination.ts';
+import TaskModel from '../models/task.ts';
 
 export default async function fetchClickupTasks(teams: Team[]) {
 	const defaultCursor = DateTime.now().setZone(TIMEZONE).startOf('month')
@@ -19,17 +20,16 @@ export default async function fetchClickupTasks(teams: Team[]) {
 		const cursorKey = ['clickup', team];
 		const cursor = await CursorModel.get(cursorKey);
 		const lastCursor = new Date().toISOString();
-
+		TaskModel.clearProcessedTaskCache(new Date().toISOString());
 		const response = await consumeClickupPagination({ weeklySummary: {} }, {
 			dateStarted: cursor?.cursor || defaultCursor,
 			dateEnded: lastCursor,
 			team: team,
 		});
 
-		await CursorModel.insert({
-			id: cursorKey,
-			cursor: lastCursor,
-		});
+		await TaskModel.flush();
+
+		TaskModel.lastProcessedDate = lastCursor;
 
 		await Bluebird.mapSeries(
 			toPairs(response.weeklySummary),
@@ -50,5 +50,10 @@ export default async function fetchClickupTasks(teams: Team[]) {
 				});
 			},
 		);
+
+		await CursorModel.insert({
+			id: cursorKey,
+			cursor: lastCursor,
+		});
 	});
 }

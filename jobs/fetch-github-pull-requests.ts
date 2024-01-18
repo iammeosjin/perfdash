@@ -44,11 +44,6 @@ export default function fetchGithubPullRequests(teams: Team[]) {
 				})
 		);
 
-		await CursorModel.insert({
-			id: cursorKey,
-			cursor: response.lastCursor || cursor?.cursor,
-		});
-
 		await TaskModel.flush();
 
 		await Bluebird.map(
@@ -70,5 +65,10 @@ export default function fetchGithubPullRequests(teams: Team[]) {
 				});
 			},
 		);
+
+		await CursorModel.insert({
+			id: cursorKey,
+			cursor: response.lastCursor || cursor?.cursor,
+		});
 	});
 }

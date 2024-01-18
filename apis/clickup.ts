@@ -61,6 +61,7 @@ export class ClickupAPI {
 				: DateTime.now())
 				.setZone(TIMEZONE);
 
+		console.log(filter);
 		const query = [
 			`page=${options?.page || 0}`,
 			`archive=false`,
@@ -92,16 +93,28 @@ export class ClickupAPI {
 				const type = typeField.type_config.options.find((option) =>
 					option.orderindex === typeField.value
 				)?.name as ClickupTaskType;
+
+				const assignee = task.assignees[0];
 				return {
 					key: task.id,
-					assignee: task.assignees[0]?.id?.toString() as string,
+					url: task.url,
+					summary: task.name,
+					assignee: assignee
+						? {
+							id: assignee?.id?.toString() as string,
+							name: assignee?.username as string,
+						}
+						: undefined,
+					creator: {
+						id: task.creator.id.toString(),
+						name: task.creator.username,
+					},
 					type,
 					dateCreated: task.date_created,
 					dateUpdated: task.date_updated,
 					dateDone: task.date_done || task.date_closed,
 					status: task.status.status,
 					parent: task.parent,
-					creator: task.creator.id.toString(),
 				};
 			});
 
@@ -115,7 +128,7 @@ export class ClickupAPI {
 	static async getTasksTimeInStatus(
 		filter: { taskIds: string[] },
 	): Promise<
-		Record<string, number>
+		Record<string, { cycleTime: number; since: number }>
 	> {
 		const query = filter.taskIds.map((taskId) => `task_ids=${taskId}`).join(
 			'&',
@@ -127,6 +140,7 @@ export class ClickupAPI {
 					status: ClickupStatus;
 					total_time: {
 						by_minute: number;
+						since: number;
 					};
 				}];
 			}
@@ -140,11 +154,19 @@ export class ClickupAPI {
 		).then((result) => result.json());
 		const taskCycleTime = filter.taskIds
 			.reduce((accum, task) => {
-				accum[task] = result[task].status_history.find((history) =>
+				const inProgress = result[task].status_history.find((history) =>
 					history.status === ClickupStatus.IN_PROGRESS
-				)?.total_time.by_minute || 0;
+				);
+				if (inProgress) {
+					accum[task] = {
+						cycleTime: inProgress.total_time.by_minute ||
+							0,
+						since: inProgress.total_time.since,
+					};
+				}
+
 				return accum;
-			}, {} as Record<string, number>);
+			}, {} as Record<string, { cycleTime: number; since: number }>);
 
 		return taskCycleTime;
 	}

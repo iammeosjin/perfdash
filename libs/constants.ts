@@ -1,8 +1,18 @@
 import { CycleTimeMetrics, Team } from '../types/common.ts';
+import { TaskType } from '../types/task.ts';
 
 export const TIMEZONE = 'Asia/Manila';
 
 export const DEFAULT_IMAGE = '/images/user.png';
+
+export const TASK_TYPE_COLOR_MAP = {
+	[TaskType.EPIC]: 'purple-500',
+	[TaskType.BUG]: 'red-500',
+	[TaskType.TASK]: 'blue-400',
+	[TaskType.STORY]: 'green-600',
+	[TaskType.DEFECT]: 'yellow-500',
+	[TaskType.SUBTASK]: 'blue-400',
+} as Record<TaskType, string>;
 
 export const GITHUB_REPOSITORIES = {
 	[Team.OPEXA]: {

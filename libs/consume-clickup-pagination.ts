@@ -12,9 +12,15 @@ import {
 	Team,
 } from '../types/common.ts';
 import { SCORE_METRICS, TIMEZONE } from './constants.ts';
-import { ClickupRequestOption, TaskStatus, TaskType } from '../types/task.ts';
+import {
+	ClickupRequestOption,
+	Task,
+	TaskStatus,
+	TaskType,
+} from '../types/task.ts';
 import reduceAndMerge from './reduce-and-merge.ts';
 import { ClickupAPI } from '../apis/clickup.ts';
+import TaskModel from '../models/task.ts';
 
 type JiraResponse = {
 	weeklySummary: Record<string, { user: ID } & TaskCycleSummary>;
@@ -44,6 +50,54 @@ export default async function consumeClickupPagination(
 			const status = ClickupAPI.parseStatus(task.status);
 			const type = ClickupAPI.parseType(task.type);
 
+			const taskCycle = taskCycles[task.key];
+			let dateTimeMovedToInprogress: string | undefined;
+			if (taskCycle) {
+				dateTimeMovedToInprogress = new Date(+taskCycle.since)
+					.toISOString();
+			}
+
+			let dateTimeMovedToDone: string | undefined;
+
+			if (task.dateDone) {
+				dateTimeMovedToDone = new Date(+task.dateDone).toISOString();
+			}
+
+			const input: Omit<Task, 'pullRequests' | 'subTasks'> = {
+				key: task.key,
+				type,
+				status,
+				summary: task.summary,
+				link: task.url,
+				assignee: task.assignee,
+				reporter: task.creator,
+				parent: task.parent ? { key: task.parent } : undefined,
+				dateTimeCreated: new Date(+task.dateCreated).toISOString(),
+				dateTimeMovedToDone,
+				dateTimeMovedToInprogress,
+				id: [options.team, task.key],
+			};
+
+			if (
+				await TaskModel.hasProcessTask({
+					key: task.key,
+					team: options.team,
+					status: status,
+				})
+			) {
+				return weeklySummary;
+			}
+
+			await TaskModel.enqueue(input);
+
+			if (input.parent) {
+				await TaskModel.enqueue({
+					subTasks: [input.id],
+					key: input.parent.key,
+					id: [options.team, input.parent.key],
+				});
+			}
+
 			if (
 				![
 					TaskType.BUG,
@@ -51,6 +105,7 @@ export default async function consumeClickupPagination(
 					TaskType.DEFECT,
 					TaskType.TASK,
 					TaskType.SUBTASK,
+					TaskType.EPIC,
 				].includes(type)
 			) {
 				return weeklySummary;
@@ -64,7 +119,7 @@ export default async function consumeClickupPagination(
 				return weeklySummary;
 			}
 
-			const assignee = await getUserByClickupHandle(task.assignee);
+			const assignee = await getUserByClickupHandle(task.assignee.id);
 
 			if (!assignee) {
 				return weeklySummary;
@@ -76,6 +131,8 @@ export default async function consumeClickupPagination(
 				taskCycleSummaryType = TaskCycleSummaryType.STORY;
 			} else if (type === TaskType.BUG) {
 				taskCycleSummaryType = TaskCycleSummaryType.BUG;
+			} else if (type === TaskType.EPIC) {
+				taskCycleSummaryType = TaskCycleSummaryType.EPIC;
 			}
 
 			const startOfWeek = DateTime.fromMillis(
@@ -88,7 +145,7 @@ export default async function consumeClickupPagination(
 
 			const assigneeKey = [
 				startOfWeek,
-				task.assignee,
+				task.assignee.id,
 				taskCycleSummaryType,
 			].join(';');
 
@@ -104,12 +161,15 @@ export default async function consumeClickupPagination(
 					taskCyclePoints: 0,
 				},
 			]);
-			const cycleTime = (taskCycles[task.key] || 0) * 60;
+			const cycleTime = (taskCycle?.cycleTime || 0) * 60;
 
 			userWeeklySummary.taskDoneCount += 1;
 			userWeeklySummary.taskDoneCycleTime += cycleTime;
 
-			if (userWeeklySummary.type === TaskCycleSummaryType.STORY) {
+			if (
+				userWeeklySummary.type === TaskCycleSummaryType.STORY ||
+				userWeeklySummary.type === TaskCycleSummaryType.EPIC
+			) {
 				userWeeklySummary.taskCyclePoints += assignee.level === 1
 					? SCORE_METRICS.JUNIORS.SDC.MAX
 					: SCORE_METRICS.SENIORS.SDC.MAX;

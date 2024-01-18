@@ -56,6 +56,7 @@ export enum TaskCycleSummaryType {
 	BUG = 'BUG',
 	STORY = 'STORY',
 	TASK = 'TASK',
+	EPIC = 'EPIC',
 }
 
 export type TaskCycleSummary = {

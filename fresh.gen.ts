@@ -14,11 +14,13 @@ import * as $backends_team_year_month_ from './routes/backends/[team]/[year]/[mo
 import * as $backends_team_year_month_day_ from './routes/backends/[team]/[year]/[month]/[day].tsx';
 import * as $backends_team_year_month_pull_requests from './routes/backends/[team]/[year]/[month]/pull-requests.tsx';
 import * as $backends_team_year_month_tasks from './routes/backends/[team]/[year]/[month]/tasks.tsx';
+import * as $backends_team_issues from './routes/backends/[team]/issues.tsx';
 import * as $doc from './routes/doc.tsx';
 import * as $greet_name_ from './routes/greet/[name].tsx';
 import * as $index from './routes/index.tsx';
 import * as $teams from './routes/teams.tsx';
 import * as $version from './routes/version.ts';
+import * as $issue_table from './islands/issue-table.tsx';
 import * as $team_list_container from './islands/team-list-container.tsx';
 import * as $weekly_pull_request_summary_table from './islands/weekly-pull-request-summary-table.tsx';
 import * as $weekly_standings from './islands/weekly-standings.tsx';
@@ -43,6 +45,7 @@ const manifest = {
 			$backends_team_year_month_pull_requests,
 		'./routes/backends/[team]/[year]/[month]/tasks.tsx':
 			$backends_team_year_month_tasks,
+		'./routes/backends/[team]/issues.tsx': $backends_team_issues,
 		'./routes/doc.tsx': $doc,
 		'./routes/greet/[name].tsx': $greet_name_,
 		'./routes/index.tsx': $index,
@@ -50,6 +53,7 @@ const manifest = {
 		'./routes/version.ts': $version,
 	},
 	islands: {
+		'./islands/issue-table.tsx': $issue_table,
 		'./islands/team-list-container.tsx': $team_list_container,
 		'./islands/weekly-pull-request-summary-table.tsx':
 			$weekly_pull_request_summary_table,

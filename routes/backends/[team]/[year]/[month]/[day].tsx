@@ -63,6 +63,8 @@ export const handler: Handlers = {
 			],
 		});
 
+		console.log(weeklySummaries);
+
 		const userWeeklySummaries: UserWeeklySummary[] = users.map(
 			(user) => {
 				const summary =

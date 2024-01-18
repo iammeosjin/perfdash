@@ -25,7 +25,15 @@ export enum JiraStatus {
 
 export type JiraTask = {
 	key: string;
-	assignee: string;
+	summary: string;
+	assignee?: {
+		id: string;
+		name: string;
+	};
+	reporter: {
+		id: string;
+		name: string;
+	};
 	hasSubtask: boolean;
 	type: JiraIssueType;
 	created: string;
@@ -34,16 +42,17 @@ export type JiraTask = {
 	movedToInProgress: string;
 	status: JiraStatus;
 	parent?: Pick<JiraTask, 'key' | 'type' | 'status'>;
-	assigneeName: string;
 	subTasks: Pick<JiraTask, 'key' | 'type' | 'status'>[];
 };
 
 export type JiraIssueFieldsResponse = {
 	issuetype: { id: string };
+	summary: string;
 	status: { name: string };
 	subtasks?: { key: string; fields: JiraIssueFieldsResponse }[];
 	parent?: { key: string; fields: JiraIssueFieldsResponse };
 	assignee: { accountId: string; displayName: string };
+	reporter: { accountId: string; displayName: string };
 	statuscategorychangedate: string;
 	updated: string;
 	created: string;
@@ -79,14 +88,22 @@ export enum ClickupStatus {
 
 export type ClickupTask = {
 	key: string;
-	assignee: string;
+	summary: string;
+	assignee?: {
+		id: string;
+		name: string;
+	};
+	creator: {
+		id: string;
+		name: string;
+	};
 	type: ClickupTaskType;
 	dateCreated: string;
 	dateUpdated: string;
 	dateDone?: string;
 	status: ClickupStatus;
 	parent?: string;
-	creator: string;
+	url: string;
 };
 
 export type ClickupTaskCustomField = {
@@ -103,6 +120,7 @@ export type ClickupTaskCustomField = {
 
 export type ClickupTasksResponse = {
 	id: string;
+	name: string;
 	custom_id: string;
 	status: {
 		status: ClickupStatus;
@@ -113,10 +131,12 @@ export type ClickupTasksResponse = {
 	date_done?: string;
 	creator: {
 		id: number;
+		username: string;
 	};
-	assignees: { id: number }[];
+	assignees: { id: number; username: string }[];
 	parent?: string;
 	custom_fields: ClickupTaskCustomField[];
+	url: string;
 };
 
 export type ClickupRequestOption = {
@@ -152,19 +172,30 @@ export type Task =
 	& {
 		id: ID; // [team, issueKey]
 		key: string;
+		summary: string;
+		link: string;
 		type: TaskType;
 		status: TaskStatus;
 		pullRequests: ID[];
-		hasSubTasks: boolean;
 		subTasks: ID[];
+		reporter: {
+			id: string;
+			name: string;
+		};
+		dateTimeCreated: string;
 	}
 	& Partial<{
+		hasSubTasks: boolean;
 		dateTimeMovedToInprogress: string;
+		dateTimeMovedToDone: string;
 		cycleTime: number;
-		assignee: string;
-		parent: string;
-		parentType: TaskType;
-		parentStatus: string;
-		assigneeName: string;
-		dateTimeCreated: string;
+		assignee: {
+			id: string;
+			name: string;
+		};
+		parent: {
+			key: string;
+			type?: TaskType;
+			status?: TaskStatus;
+		};
 	}>;

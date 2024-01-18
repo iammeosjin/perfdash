@@ -19,12 +19,6 @@ export default async function fetchJiraTasks(teams: Team[]) {
 
 		const cursorKey = ['jira', team];
 		const cursor = await CursorModel.get(cursorKey);
-		if (!cursor?.cursor) {
-			await CursorModel.insert({
-				id: cursorKey,
-				cursor: defaultCursor,
-			});
-		}
 
 		TaskModel.clearProcessedTaskCache(new Date().toISOString());
 		const response = await consumeJiraPagination({ weeklySummary: {} }, {
@@ -33,11 +27,6 @@ export default async function fetchJiraTasks(teams: Team[]) {
 		});
 
 		const lastCursor = new Date().toISOString();
-
-		await CursorModel.insert({
-			id: cursorKey,
-			cursor: lastCursor,
-		});
 
 		await TaskModel.flush();
 
@@ -62,5 +51,10 @@ export default async function fetchJiraTasks(teams: Team[]) {
 				});
 			},
 		);
+
+		await CursorModel.insert({
+			id: cursorKey,
+			cursor: lastCursor,
+		});
 	});
 }
