@@ -63,7 +63,7 @@ class Model extends DefaultModel<Task> {
 			let task = this._queue.get(params.key) || null;
 
 			if (!task) {
-				task = await this.get([params.key, params.status]);
+				task = await this.get([params.team, params.key]);
 			}
 			return !!task?.status;
 		}

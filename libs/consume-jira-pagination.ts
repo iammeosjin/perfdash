@@ -80,6 +80,8 @@ export default async function consumeJiraPagination(
 
 			await TaskModel.enqueue(input);
 
+			console.log('test');
+
 			if (issue.hasSubtask) {
 				const subTasks = await Bluebird.map(
 					issue.subTasks,
