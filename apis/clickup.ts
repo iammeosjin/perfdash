@@ -118,6 +118,8 @@ export class ClickupAPI {
 				};
 			});
 
+		console.log('hasNextPage', !result.last_page, options?.page);
+
 		return {
 			tasks,
 			hasNextPage: !result.last_page,

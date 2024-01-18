@@ -4,6 +4,7 @@
 
 import * as $_404 from './routes/_404.tsx';
 import * as $_app from './routes/_app.tsx';
+import * as $api_team_cursors from './routes/api/[team]/cursors.ts';
 import * as $api_team_metrics from './routes/api/[team]/metrics.ts';
 import * as $api_jobs from './routes/api/jobs.ts';
 import * as $api_jobs_job_ from './routes/api/jobs/[job].ts';
@@ -31,6 +32,7 @@ const manifest = {
 	routes: {
 		'./routes/_404.tsx': $_404,
 		'./routes/_app.tsx': $_app,
+		'./routes/api/[team]/cursors.ts': $api_team_cursors,
 		'./routes/api/[team]/metrics.ts': $api_team_metrics,
 		'./routes/api/jobs.ts': $api_jobs,
 		'./routes/api/jobs/[job].ts': $api_jobs_job_,
