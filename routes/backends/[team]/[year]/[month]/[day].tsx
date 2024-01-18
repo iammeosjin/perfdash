@@ -63,8 +63,6 @@ export const handler: Handlers = {
 			],
 		});
 
-		console.log(weeklySummaries);
-
 		const userWeeklySummaries: UserWeeklySummary[] = users.map(
 			(user) => {
 				const summary =
@@ -85,6 +83,7 @@ export const handler: Handlers = {
 					TaskCycleSummaryType.TASK,
 					TaskCycleSummaryType.BUG,
 					TaskCycleSummaryType.STORY,
+					TaskCycleSummaryType.EPIC,
 				].map((type) => {
 					const taskCycleSummary = (summary?.taskCycleSummaries ||
 						[]).find(

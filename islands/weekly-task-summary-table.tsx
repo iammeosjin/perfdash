@@ -41,7 +41,7 @@ export default function WeeklyTaskSummaryTable(props: Props) {
 											</div>
 										</th>
 										<th
-											colSpan={3}
+											colSpan={4}
 											class='p-2 whitespace-nowrap w-1/3 text-center '
 										>
 											<div class='font-semibold text-center'>
@@ -49,7 +49,7 @@ export default function WeeklyTaskSummaryTable(props: Props) {
 											</div>
 										</th>
 										<th
-											rowSpan={2}
+											rowSpan={1}
 											class='p-2 whitespace-nowrap align-middle'
 										>
 											<div class='font-semibold text-left'>
@@ -59,7 +59,7 @@ export default function WeeklyTaskSummaryTable(props: Props) {
 										</th>
 									</tr>
 									<tr>
-										{['Tasks', 'Bugs', 'Stories']
+										{['Tasks', 'Bugs', 'Stories', 'Epics']
 											.map((type) => {
 												return (
 													<th
@@ -162,6 +162,7 @@ export default function WeeklyTaskSummaryTable(props: Props) {
 													TaskCycleSummaryType.TASK,
 													TaskCycleSummaryType.BUG,
 													TaskCycleSummaryType.STORY,
+													TaskCycleSummaryType.EPIC,
 												].map((type) => {
 													const summary = footer
 														?.totalTaskCycleSummary[

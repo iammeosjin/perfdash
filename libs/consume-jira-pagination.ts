@@ -116,6 +116,7 @@ export default async function consumeJiraPagination(
 					TaskType.DEFECT,
 					TaskType.TASK,
 					TaskType.SUBTASK,
+					TaskType.EPIC,
 				].includes(input.type)
 			) {
 				return weeklySummary;
@@ -155,6 +156,8 @@ export default async function consumeJiraPagination(
 
 			if (input.type === TaskType.STORY) {
 				taskCycleSummaryType = TaskCycleSummaryType.STORY;
+			} else if (input.type === TaskType.EPIC) {
+				taskCycleSummaryType = TaskCycleSummaryType.EPIC;
 			} else if (input.type === TaskType.BUG) {
 				taskCycleSummaryType = TaskCycleSummaryType.BUG;
 			} else if (input.type === TaskType.TASK) {
@@ -185,7 +188,10 @@ export default async function consumeJiraPagination(
 			userWeeklySummary.taskDoneCount += 1;
 			userWeeklySummary.taskDoneCycleTime += cycleTime;
 
-			if (userWeeklySummary.type === TaskCycleSummaryType.STORY) {
+			if (
+				userWeeklySummary.type === TaskCycleSummaryType.STORY ||
+				userWeeklySummary.type === TaskCycleSummaryType.EPIC
+			) {
 				userWeeklySummary.taskCyclePoints += assignee.level === 1
 					? SCORE_METRICS.JUNIORS.SDC.MAX
 					: SCORE_METRICS.SENIORS.SDC.MAX;

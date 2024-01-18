@@ -76,6 +76,7 @@ export const handler: Handlers = {
 					TaskCycleSummaryType.TASK,
 					TaskCycleSummaryType.BUG,
 					TaskCycleSummaryType.STORY,
+					TaskCycleSummaryType.EPIC,
 				].map((type) => {
 					const taskCycleSummary = (summary?.taskCycleSummaries ||
 						[]).find(
@@ -346,10 +347,7 @@ export default function Home(
 					</div>
 				</section>
 
-				<section
-					class='antialiased bg-gray-100 text-gray-600 py-10 px-4'
-					hidden={data.team === 'opexa'}
-				>
+				<section class='antialiased bg-gray-100 text-gray-600 py-10 px-4'>
 					<div class='flex flex-col justify-center h-full'>
 						<div class='w-full max-w-5xl mx-auto bg-white shadow-lg rounded-sm border border-gray-200'>
 							<header class='px-5 py-4 border-b border-gray-100'>
@@ -383,7 +381,7 @@ export default function Home(
 												</div>
 											</th>
 											<th
-												colSpan={3}
+												colSpan={4}
 												class='p-2 whitespace-nowrap w-1/3 text-center '
 											>
 												<div class='font-semibold text-center'>
@@ -405,6 +403,7 @@ export default function Home(
 												'Tasks',
 												'Bugs',
 												'Stories',
+												'Epics',
 											]
 												.map((type) => {
 													return (
@@ -463,6 +462,8 @@ export default function Home(
 																.BUG,
 															TaskCycleSummaryType
 																.STORY,
+															TaskCycleSummaryType
+																.EPIC,
 														].map((type) => {
 															const total =
 																summary

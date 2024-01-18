@@ -1,14 +1,8 @@
 import { Handlers } from '$fresh/server.ts';
 import { Head } from '$fresh/runtime.ts';
-// @deno-types=npm:@types/luxon
-import { DateTime } from 'npm:luxon';
-// @deno-types=npm:@types/bluebird
-import Bluebird from 'npm:bluebird';
-import pluck from 'https://deno.land/x/ramda@v0.27.2/source/pluck.js';
-import uniq from 'https://deno.land/x/ramda@v0.27.2/source/uniq.js';
+import allPass from 'https://deno.land/x/ramda@v0.27.2/source/allPass.js';
 import reject from 'https://deno.land/x/ramda@v0.27.2/source/reject.js';
 import isNil from 'https://deno.land/x/ramda@v0.27.2/source/isNil.js';
-import UserModel from '../../../models/user.ts';
 import { Team, User } from '../../../types/common.ts';
 import {
 	getUserByClickupHandle,
@@ -16,7 +10,7 @@ import {
 } from '../../../controllers/user.ts';
 import TaskModel from '../../../models/task.ts';
 import IssueTable from '../../../islands/issue-table.tsx';
-import { Task } from '../../../types/task.ts';
+import { Task, TaskStatus } from '../../../types/task.ts';
 
 function cleanObject<T = Record<string, unknown>>(obj: T) {
 	return reject(isNil)(obj);
@@ -39,7 +33,13 @@ export const handler: Handlers = {
 		const issues = await TaskModel.list({ prefix: [ctx.params.team] });
 
 		return ctx.render({
-			issues: issues.filter((issue) => !!issue.reporter),
+			issues: issues.filter((issue) =>
+				allPass([
+					!!issue.reporter,
+					issue.status !== TaskStatus.BACKLOG,
+					issue.status !== TaskStatus.READY,
+				])
+			),
 		});
 	},
 };
