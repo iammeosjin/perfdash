@@ -5,7 +5,7 @@ import toPairs from 'https://deno.land/x/ramda@v0.27.2/source/toPairs.js';
 import CursorModel from '../../../models/cursor.ts';
 export const handler: Handlers = {
 	async PATCH(req, ctx) {
-		const rawBody = await req.text();
+		const rawBody = await req.json();
 
 		const headers = new Headers();
 
@@ -22,6 +22,16 @@ export const handler: Handlers = {
 		);
 
 		return new Response(JSON.stringify(true, null, 2), {
+			status: 201, // See Other
+			headers,
+		});
+	},
+	async GET() {
+		const headers = new Headers();
+
+		headers.set('Content-Type', 'application/json');
+
+		return new Response(JSON.stringify(await CursorModel.list(), null, 2), {
 			status: 201, // See Other
 			headers,
 		});
