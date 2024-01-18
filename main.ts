@@ -13,7 +13,7 @@ import updateSummaries from './jobs/update-summaries.ts';
 
 Deno.cron(
 	'update summaries',
-	'* */1 * * *',
+	'0 * * * *',
 	async () => {
 		await updateSummaries();
 	},

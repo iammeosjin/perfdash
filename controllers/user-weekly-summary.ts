@@ -13,6 +13,7 @@ import {
 import { TIMEZONE } from '../libs/constants.ts';
 import CursorModel from '../models/cursor.ts';
 import omit from 'https://deno.land/x/ramda@v0.27.2/source/omit.js';
+import TaskModel from '../models/task.ts';
 
 export async function upsertUserWeeklySummary(
 	input: {
@@ -107,6 +108,13 @@ export async function clearUserWeeklySummary(team: Team) {
 		await UserWeeklySummaryModel.list({ prefix: [team] }),
 		async (uws) => {
 			await UserWeeklySummaryModel.delete(uws.id);
+		},
+	);
+
+	await Bluebird.map(
+		await TaskModel.list({ prefix: [team] }),
+		async (uws) => {
+			await TaskModel.delete(uws.id);
 		},
 	);
 
