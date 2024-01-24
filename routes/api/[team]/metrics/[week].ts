@@ -6,7 +6,7 @@ import { Team } from '../../../../types/common.ts';
 import { TIMEZONE } from '../../../../libs/constants.ts';
 
 export const handler: Handlers = {
-	async PATCH(_, ctx) {
+	PATCH(_, ctx) {
 		const dateTime = DateTime.fromObject({
 			weekYear: DateTime.now().weekYear,
 			weekNumber: parseInt(ctx.params.week as string),
@@ -14,7 +14,7 @@ export const handler: Handlers = {
 
 		const headers = new Headers();
 
-		await fetchClickupTasks(
+		fetchClickupTasks(
 			[ctx.params.team as Team],
 			dateTime.startOf('week'),
 		);

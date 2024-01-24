@@ -69,6 +69,8 @@ export default async function fetchClickupTasks(
 			},
 		);
 
+		console.log('fetch-clickup-done done');
+
 		if (!startOfWeek) {
 			await CursorModel.insert({
 				id: cursorKey,
