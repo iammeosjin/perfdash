@@ -79,7 +79,7 @@ export default function IssueTable(props: { issues: Task[] }) {
 										href={issue.link}
 										class='hover:underline hover:text-blue-500'
 									>
-										{issue.key}
+										{issue.customId || issue.key}
 									</a>
 								</div>
 							</td>

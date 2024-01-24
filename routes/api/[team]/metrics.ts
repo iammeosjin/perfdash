@@ -38,7 +38,7 @@ export const handler: Handlers = {
 
 	async DELETE(_, ctx) {
 		const headers = new Headers();
-
+		
 		await clearUserWeeklySummary(ctx.params.team as Team);
 
 		return new Response(JSON.stringify(true, null, 2), {

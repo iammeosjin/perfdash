@@ -98,6 +98,7 @@ export class ClickupAPI {
 				return {
 					key: task.id,
 					url: task.url,
+					customId: task.custom_id,
 					summary: task.name,
 					assignee: assignee
 						? {

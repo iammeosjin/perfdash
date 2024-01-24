@@ -89,6 +89,7 @@ export enum ClickupStatus {
 export type ClickupTask = {
 	key: string;
 	summary: string;
+	customId: string;
 	assignee?: {
 		id: string;
 		name: string;
@@ -172,6 +173,7 @@ export type Task =
 	& {
 		id: ID; // [team, issueKey]
 		key: string;
+		customId?: string;
 		summary: string;
 		link: string;
 		type: TaskType;

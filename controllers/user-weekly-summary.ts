@@ -103,6 +103,9 @@ export async function clearUserWeeklySummary(team: Team) {
 		},
 	);
 
+	await TaskModel.flush();
+	TaskModel.clearCache();
+
 	await Bluebird.map(
 		await TaskModel.list({ prefix: [team] }),
 		async (uws) => {

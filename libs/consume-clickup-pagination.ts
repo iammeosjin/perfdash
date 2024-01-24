@@ -70,6 +70,7 @@ export default async function consumeClickupPagination(
 				key: task.key,
 				type,
 				status,
+				customId: task.customId,
 				summary: task.summary,
 				link: task.url,
 				assignee: task.assignee,

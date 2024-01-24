@@ -1,4 +1,5 @@
 import uniq from 'https://deno.land/x/ramda@v0.27.2/source/uniq.js';
+import ms from 'npm:ms';
 // @deno-types=npm:@types/luxon
 import { DateTime } from 'npm:luxon';
 // @deno-types=npm:@types/bluebird
@@ -24,6 +25,11 @@ class Model extends DefaultModel<Task> {
 
 	set lastProcessedDate(date: string) {
 		this._lastProcessedDate = date;
+	}
+
+	clearCache() {
+		this._lastProcessedDate = undefined;
+		this._processedTaskCache.clear();
 	}
 
 	clearProcessedTaskCache(cursor: string) {
@@ -147,6 +153,7 @@ class Model extends DefaultModel<Task> {
 							...(currentTask || {}),
 							...issue,
 						},
+						{ expireIn: ms('30d') },
 					);
 
 					return [...issue.id, issue.status].join(':splitter:');
