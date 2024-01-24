@@ -12,7 +12,10 @@ import { upsertUserWeeklySummary } from '../controllers/user-weekly-summary.ts';
 import consumeClickupPagination from '../libs/consume-clickup-pagination.ts';
 import TaskModel from '../models/task.ts';
 
-export default async function fetchClickupTasks(teams: Team[]) {
+export default async function fetchClickupTasks(
+	teams: Team[],
+	startOfWeek?: DateTime,
+) {
 	const defaultCursor = DateTime.now().setZone(TIMEZONE).startOf('month')
 		.toISO() as string;
 	await Bluebird.mapSeries(teams, async (team) => {
@@ -20,11 +23,20 @@ export default async function fetchClickupTasks(teams: Team[]) {
 
 		const cursorKey = ['clickup', team];
 		const cursor = await CursorModel.get(cursorKey);
-		const lastCursor = new Date().toISOString();
-		TaskModel.clearProcessedTaskCache(new Date().toISOString());
+		const lastCursor = DateTime.now().setZone(TIMEZONE).toISO() as string;
+		const dateStarted = startOfWeek?.toISO() || cursor?.cursor ||
+			defaultCursor;
+
+		const dateEnded = startOfWeek
+			? startOfWeek.endOf('week').toISO()
+			: lastCursor;
+
+		if (!startOfWeek) {
+			TaskModel.clearProcessedTaskCache(lastCursor);
+		}
 		const response = await consumeClickupPagination({ weeklySummary: {} }, {
-			dateStarted: cursor?.cursor || defaultCursor,
-			dateEnded: lastCursor,
+			dateStarted,
+			dateEnded: dateEnded as string,
 			team: team,
 		});
 
@@ -57,9 +69,11 @@ export default async function fetchClickupTasks(teams: Team[]) {
 			},
 		);
 
-		await CursorModel.insert({
-			id: cursorKey,
-			cursor: lastCursor,
-		});
+		if (!startOfWeek) {
+			await CursorModel.insert({
+				id: cursorKey,
+				cursor: lastCursor,
+			});
+		}
 	});
 }

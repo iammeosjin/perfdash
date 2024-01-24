@@ -15,7 +15,9 @@ import {
 	consumeGithubPaginationByDateTime,
 } from '../libs/consume-github-pagination.ts';
 
-export default function fetchGithubPullRequests(teams: Team[]) {
+export default function fetchGithubPullRequests(
+	teams: Team[],
+) {
 	const mergedAt = DateTime.now().setZone(TIMEZONE).startOf('month')
 		.toISO() as string;
 	return Bluebird.mapSeries(teams, async (team) => {
