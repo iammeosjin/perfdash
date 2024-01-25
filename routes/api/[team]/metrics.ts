@@ -18,6 +18,8 @@ export const handler: Handlers = {
 			metrics = body.metrics || metrics;
 		}
 
+		console.log('metrics', metrics);
+
 		if (metrics.includes('github')) {
 			await fetchGithubPullRequests([ctx.params.team as Team]);
 		}

@@ -34,6 +34,12 @@ export default async function fetchClickupTasks(
 		if (!startOfWeek) {
 			TaskModel.clearProcessedTaskCache(lastCursor);
 		}
+
+		console.log('fetching clickup tasks', {
+			dateStarted,
+			dateEnded: dateEnded as string,
+			team: team,
+		});
 		const response = await consumeClickupPagination({ weeklySummary: {} }, {
 			dateStarted,
 			dateEnded: dateEnded as string,
