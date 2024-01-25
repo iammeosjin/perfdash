@@ -81,7 +81,7 @@ export default async function consumeClickupPagination(
 				dateTimeMovedToInprogress,
 				id: [options.team, task.key],
 			};
-
+			let startProcess = Date.now();
 			if (
 				await TaskModel.hasProcessTask({
 					key: task.key,
@@ -102,6 +102,8 @@ export default async function consumeClickupPagination(
 				});
 			}
 
+			console.log(Date.now() - startProcess, 'ms', 'enqueue', input.id);
+
 			if (
 				![
 					TaskType.BUG,
@@ -115,7 +117,9 @@ export default async function consumeClickupPagination(
 				return weeklySummary;
 			}
 
+			startProcess = Date.now();
 			const reporter = await getUserByClickupHandle(task.creator.id);
+			console.log(Date.now() - startProcess, 'ms', 'get reporter');
 
 			const startOfWeek = DateTime.fromMillis(
 				+(task.dateDone || task.dateUpdated),
@@ -150,7 +154,9 @@ export default async function consumeClickupPagination(
 				return weeklySummary;
 			}
 
+			startProcess = Date.now();
 			const assignee = await getUserByClickupHandle(task.assignee.id);
+			console.log(Date.now() - startProcess, 'ms', 'get assignee');
 
 			if (!assignee) {
 				return weeklySummary;
@@ -172,6 +178,7 @@ export default async function consumeClickupPagination(
 				taskCycleSummaryType,
 			].join(';');
 
+			startProcess = Date.now();
 			const userWeeklySummary = reduceAndMerge([
 				{
 					...(weeklySummary[assigneeKey] || {}),
@@ -217,6 +224,7 @@ export default async function consumeClickupPagination(
 				);
 
 			weeklySummary[assigneeKey] = userWeeklySummary;
+			console.log(Date.now() - startProcess, 'ms', 'reduce and merge');
 
 			return weeklySummary;
 		},

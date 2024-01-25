@@ -46,10 +46,15 @@ export default async function fetchClickupTasks(
 			team: team,
 		});
 
+		let startProcess = Date.now();
+
 		await TaskModel.flush();
+
+		console.log(Date.now() - startProcess, 'ms to flush tasks');
 
 		TaskModel.lastProcessedDate = lastCursor;
 
+		startProcess = Date.now();
 		await Bluebird.mapSeries(
 			toPairs(response.weeklySummary),
 			async (
@@ -74,8 +79,12 @@ export default async function fetchClickupTasks(
 				});
 			},
 		);
+		console.log(
+			Date.now() - startProcess,
+			'ms to upsert user weekly summary',
+		);
 
-		console.log('fetch-clickup-done done');
+		console.log('fetch-clickup-done');
 
 		if (!startOfWeek) {
 			await CursorModel.insert({
